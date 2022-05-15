@@ -1,23 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Sidebar from '../../../components/dashboard/Sidebar';
 import { Formik } from 'formik';
+import Image from 'next/image'
 import axios from 'axios';
 
 const AddPost = () => {
     // const [post, setPost] = React.useState({})
 
-    // const [featuredImageInput, setFeaturedImage] = useState()
+    const [uploadedFeaturedImage, setUploadedFeaturedImage] = useState(null)
 
     const fileInputRef = useRef<HTMLInputElement>(null);
-
-
 
     return (
         <div className='flex columns-2 h-full'>
             <Sidebar />
             <main className='m-4 w-full'>
                 <Formik
-                    initialValues={{ title: '', content: '', category: '' }}
+                    initialValues={{ title: '', content: '', category: '', featuredImage: uploadedFeaturedImage }}
                     validate={values => {
                         const errors: any = {};
                         if (!values.title) {
@@ -27,7 +26,7 @@ const AddPost = () => {
                     }}
                     onSubmit={async (values, { setSubmitting }) => {
 
-                        const res = await axios.post('/api/posts', values);
+                        const res = await axios.post('/api/posts', { ...values, featuredImage: uploadedFeaturedImage });
                         console.log(values);
                         setSubmitting(false);
                     }}
@@ -102,54 +101,72 @@ const AddPost = () => {
                                             {/* featured Image */}
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700">Featured Image</label>
-                                                <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                                                    <div className="space-y-1 text-center">
-                                                        <svg
-                                                            className="mx-auto h-12 w-12 text-gray-400"
-                                                            stroke="currentColor"
-                                                            fill="none"
-                                                            viewBox="0 0 48 48"
-                                                            aria-hidden="true"
-                                                        >
-                                                            <path
-                                                                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                                                strokeWidth={2}
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
+
+                                                {uploadedFeaturedImage ?
+                                                    <div className='block'>
+                                                        <div>
+                                                            <Image src={`/uploads/${uploadedFeaturedImage}`}
+                                                                width={300} height={250}
+                                                                alt="Featured Image"
                                                             />
-                                                        </svg>
-                                                        <div className="flex text-sm text-gray-600">
-                                                            <label
-                                                                htmlFor="featuredImage"
-                                                                className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
-                                                            >
-                                                                <span onClick={() => fileInputRef.current && fileInputRef.current.click()}>Upload a file</span>
-                                                                <input
-                                                                    ref={fileInputRef}
-                                                                    className='sr-only'
-                                                                    type="file"
-                                                                    name="featuredImage"
-                                                                    onChange={async (event) => {
-                                                                        let file = event.target.files![0];
-                                                                        // setFeaturedImage({ file });
-                                                                        // setFieldValue('featuredImage', file);
-
-                                                                        let fd = new FormData()
-                                                                        fd.append('image', file)
-
-                                                                        console.log('file being uploaded', fd);
-
-                                                                        const res = await axios.post('/api/posts/images', fd);
-                                                                        console.log(res);
-                                                                    }}
-                                                                    onBlur={handleBlur}
-                                                                // value={featuredImageInput.file}
-                                                                />     </label>
-                                                            <p className="pl-1">or drag and drop</p>
                                                         </div>
-                                                        <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
-                                                    </div>
-                                                </div>
+                                                        <button className="px-4 py-1 text-sm text-red-600 font-semibold rounded-full border border-red-200 hover:text-white hover:bg-red-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2"
+                                                            onClick={() => setUploadedFeaturedImage(null)}
+                                                        >Remove</button>
+                                                    </div> :
+                                                    (<div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                                                        <div className="space-y-1 text-center">
+                                                            <svg
+                                                                className="mx-auto h-12 w-12 text-gray-400"
+                                                                stroke="currentColor"
+                                                                fill="none"
+                                                                viewBox="0 0 48 48"
+                                                                aria-hidden="true"
+                                                            >
+                                                                <path
+                                                                    d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                                                    strokeWidth={2}
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                />
+                                                            </svg>
+                                                            <div className="flex text-sm text-gray-600">
+                                                                <label
+                                                                    htmlFor="featuredImage"
+                                                                    className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+                                                                >
+                                                                    <span onClick={() => fileInputRef.current && fileInputRef.current.click()}>Upload a file</span>
+                                                                    <input
+                                                                        ref={fileInputRef}
+                                                                        className='sr-only'
+                                                                        type="file"
+                                                                        // name="featuredImage"
+                                                                        onChange={async (event) => {
+                                                                            let file = event.target.files![0];
+                                                                            // setFeaturedImage({ file });
+                                                                            // setFieldValue('featuredImage', file);
+
+                                                                            let fd = new FormData()
+                                                                            fd.append('image', file)
+
+                                                                            // console.log('file being uploaded', fd);
+
+                                                                            await axios.post('/api/posts/images', fd)
+                                                                                .then(res => {
+                                                                                    const fileName = res.data.filename;
+                                                                                    setUploadedFeaturedImage(fileName);
+                                                                                })
+                                                                                .catch(err => console.log(err));
+
+                                                                        }}
+                                                                        onBlur={handleBlur}
+                                                                    // value={featuredImageInput.file}
+                                                                    />     </label>
+                                                                <p className="pl-1">or drag and drop</p>
+                                                            </div>
+                                                            <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                                                        </div>
+                                                    </div>)}
                                             </div>
 
                                             {/* {errors.featuredImage && touched.featuredImage && errors.featuredImage} */}
