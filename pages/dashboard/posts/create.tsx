@@ -1,11 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react';
 import Sidebar from '../../../components/dashboard/Sidebar';
-import { Formik } from 'formik';
-import Image from 'next/image'
+// import Tiptap from '../../../components/dashboard/Tiptap';
 import axios from 'axios';
+import { Formik } from 'formik';
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
+
+const Quill = dynamic(() => import("../../../components/dashboard/Quill"), {
+    // Do not import in server side
+    ssr: false,
+})
 
 const AddPost = () => {
-    // const [post, setPost] = React.useState({})
 
     const [uploadedFeaturedImage, setUploadedFeaturedImage] = useState(null)
 
@@ -75,6 +81,11 @@ const AddPost = () => {
                                                 </div>
                                             </div>
                                             {errors.title && touched.title && errors.title}
+                                            {/* <Tiptap /> */}
+
+                                            {/* <Draft /> */}
+
+                                            <Quill />
 
                                             {/* post content */}
                                             <div className="grid grid-cols-3 gap-6">
