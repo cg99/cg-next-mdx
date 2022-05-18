@@ -1,11 +1,9 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Sidebar from '../../../components/dashboard/Sidebar';
-// import Tiptap from '../../../components/dashboard/Tiptap';
 import axios from 'axios';
 import { Formik } from 'formik';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-
 const Quill = dynamic(() => import("../../../components/dashboard/Quill"), {
     // Do not import in server side
     ssr: false,
@@ -16,6 +14,12 @@ const AddPost = () => {
     const [uploadedFeaturedImage, setUploadedFeaturedImage] = useState(null)
 
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        setIsLoading(true);
+    }, [])
 
     return (
         <div className='flex columns-2 h-full'>
@@ -85,7 +89,7 @@ const AddPost = () => {
 
                                             {/* <Draft /> */}
 
-                                            <Quill />
+                                            {isLoading && <Quill />}
 
                                             {/* post content */}
                                             <div className="grid grid-cols-3 gap-6">

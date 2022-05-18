@@ -1,6 +1,5 @@
-import dynamic from 'next/dynamic'
 import 'react-quill/dist/quill.snow.css'
-import QuillNoSSRWrapper from 'react-quill';
+import ReactQuill from 'react-quill';
 
 const modules = {
     toolbar: [
@@ -43,8 +42,12 @@ const formats = [
 ]
 
 const Quill = () => {
+
     return (<>
-        <QuillNoSSRWrapper modules={modules} formats={formats} theme="snow" />
+        <ReactQuill
+            modules={modules}
+            formats={formats}
+            theme="snow" />
     </>)
 }
 
