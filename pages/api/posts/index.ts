@@ -43,6 +43,14 @@ export function withAuth(
   return next();
 }
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: "10mb",
+    },
+  },
+};
+
 const handler = nc()
   // .use(withAuth)
   .get(async (req: NextApiRequest, res: NextApiResponse) => {
@@ -56,14 +64,17 @@ const handler = nc()
   .post(async (req: NextApiRequest, res: NextApiResponse) => {
     const postContent = req.body;
 
-    console.log(postContent);
+    // console.log(postContent);
     const post = await Post.create(postContent);
 
     try {
-      await post.save();
-      res.status(200).json({ post });
+      const response = await post.save();
+      if (response) {
+        res.status(200).json({ success: true, post });
+      }
+      res.status(500).json({ success: false, message: "Failed to append" });
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ success: false, message: error.message });
     }
   })
   .patch((req: NextApiRequest, res: NextApiResponse) =>
@@ -72,8 +83,16 @@ const handler = nc()
   .put((req: NextApiRequest, res: NextApiResponse) =>
     res.status(200).json({ message: "PUT" })
   )
-  .delete((req: NextApiRequest, res: NextApiResponse) =>
-    res.status(200).json({ message: "DELETE" })
-  );
+  .delete(async (req: NextApiRequest, res: NextApiResponse) => {
+    try {
+      const response = await Post.deleteOne({ _id: req.query.id });
+      if (response.deletedCount === 1) {
+        res.status(200).json({ success: true });
+      }
+      res.status(500).json({ success: false, message: "Failed to delete" });
+    } catch (error: any) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  });
 
 export default connectDB(handler);

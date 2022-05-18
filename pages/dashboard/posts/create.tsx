@@ -2,12 +2,17 @@ import { useEffect, useRef, useState } from 'react';
 import Sidebar from '../../../components/dashboard/Sidebar';
 import axios from 'axios';
 import { Formik } from 'formik';
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
-const Quill = dynamic(() => import("../../../components/dashboard/Quill"), {
-    // Do not import in server side
+// import Quill from "../../../components/dashboard/Quill";
+import "react-quill/dist/quill.snow.css";
+import dynamic from 'next/dynamic';
+import Toast from '../../../components/Toast';
+
+const QuillNoSSRWrapper = dynamic(import('react-quill'), {
     ssr: false,
+    loading: () => <p>Loading ...</p>,
 })
+
 
 const AddPost = () => {
 
@@ -15,16 +20,34 @@ const AddPost = () => {
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const [isLoading, setIsLoading] = useState(false);
+    const [postContent, setPostContent] = useState("");
 
-    useEffect(() => {
-        setIsLoading(true);
-    }, [])
+    const [postCreated, setPostCreated] = useState(false);
+
+    const modules = {
+        toolbar: [
+            [{ 'header': [1, 2, false] }],
+            ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+            ['link', 'image'],
+            ['clean']
+        ],
+    };
+
+    const formats = [
+        'header',
+        'bold', 'italic', 'underline', 'strike', 'blockquote',
+        'list', 'bullet', 'indent',
+        'link', 'image'
+    ];
 
     return (
         <div className='flex columns-2 h-full'>
             <Sidebar />
             <main className='m-4 w-full'>
+
+                {postCreated && <Toast message='Post created successfully.' type='success' />}
+
                 <Formik
                     initialValues={{ title: '', content: '', category: '', featuredImage: uploadedFeaturedImage }}
                     validate={values => {
@@ -36,9 +59,19 @@ const AddPost = () => {
                     }}
                     onSubmit={async (values, { setSubmitting }) => {
 
-                        const res = await axios.post('/api/posts', { ...values, featuredImage: uploadedFeaturedImage });
-                        console.log(values);
+                        const bodyContent = { ...values, content: postContent, featuredImage: uploadedFeaturedImage }
+                        await axios.post('/api/posts', bodyContent)
+                            .then(res => {
+                                if (res.data.success === true) {
+                                    setPostCreated(true)
+                                } else {
+                                    console.error('error', res.data)
+                                }
+                            })
+                            .catch(err => console.log(err));
+
                         setSubmitting(false);
+
                     }}
                 >
                     {({
@@ -89,9 +122,14 @@ const AddPost = () => {
 
                                             {/* <Draft /> */}
 
-                                            {isLoading && <Quill />}
+                                            <QuillNoSSRWrapper
+                                                theme="snow"
+                                                onChange={v => setPostContent(v)}
+                                                value={postContent}
+                                                modules={modules}
+                                                formats={formats} />
 
-                                            {/* post content */}
+                                            {/* post content
                                             <div className="grid grid-cols-3 gap-6">
                                                 <div className="col-span-3 sm:col-span-2">
                                                     <label htmlFor="content" className="block text-sm font-medium text-gray-700">
@@ -111,7 +149,7 @@ const AddPost = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            {errors.content && touched.content && errors.content}
+                                            {errors.content && touched.content && errors.content} */}
 
                                             {/* featured Image */}
                                             <div>

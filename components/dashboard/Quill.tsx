@@ -1,54 +1,54 @@
-import 'react-quill/dist/quill.snow.css'
-import ReactQuill from 'react-quill';
+import React from 'react';
+import "react-quill/dist/quill.snow.css";
+import dynamic from 'next/dynamic';
 
-const modules = {
-    toolbar: [
-        [{ header: '1' }, { header: '2' }, { font: [] }],
-        [{ size: [] }],
-        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-        [
-            { list: 'ordered' },
-            { list: 'bullet' },
-            { indent: '-1' },
-            { indent: '+1' },
+const QuillNoSSRWrapper = dynamic(import('react-quill'), {
+    ssr: false,
+    loading: () => <p>Loading ...</p>,
+})
+
+
+class Quill extends React.Component<{}, { text: string; }> {
+    constructor(props) {
+        super(props);
+        this.state = {
+            text: "",
+        }
+    }
+
+    modules = {
+        toolbar: [
+            [{ 'header': [1, 2, false] }],
+            ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+            ['link', 'image'],
+            ['clean']
         ],
-        ['link', 'image', 'video'],
-        ['clean'],
-    ],
-    clipboard: {
-        // toggle to add extra line breaks when pasting HTML:
-        matchVisual: false,
-    },
-}
-/*
- * Quill editor formats
- * See https://quilljs.com/docs/formats/
- */
-const formats = [
-    'header',
-    'font',
-    'size',
-    'bold',
-    'italic',
-    'underline',
-    'strike',
-    'blockquote',
-    'list',
-    'bullet',
-    'indent',
-    'link',
-    'image',
-    'video',
-]
+    };
 
-const Quill = () => {
+    formats = [
+        'header',
+        'bold', 'italic', 'underline', 'strike', 'blockquote',
+        'list', 'bullet', 'indent',
+        'link', 'image'
+    ];
 
-    return (<>
-        <ReactQuill
-            modules={modules}
-            formats={formats}
-            theme="snow" />
-    </>)
+    render() {
+        return (
+            <div className="text-editor">
+                <QuillNoSSRWrapper
+                    theme="snow"
+                    onChange={(e) => {
+                        this.setState({
+                            text: e
+                        })
+                    }}
+                    value={this.state.text}
+                    modules={this.modules}
+                    formats={this.formats} />
+            </div>
+        );
+    }
 }
 
 export default Quill
