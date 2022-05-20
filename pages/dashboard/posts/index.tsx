@@ -1,11 +1,9 @@
-import React from 'react'
-import Sidebar from '../../../components/dashboard/Sidebar';
-import Link from 'next/link';
 import axios from 'axios';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { IPost } from '../../../utils/interface/IPost';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { RiDeleteBin2Line } from 'react-icons/ri';
+import Layout from '../../../components/dashboard/Layout';
+import { IPost } from '../../../utils/interface/IPost';
 
 const Posts = () => {
     const [posts, setPosts] = useState<IPost[]>([]);
@@ -19,10 +17,6 @@ const Posts = () => {
             setLoading(false);
         }
         fetchPosts();
-
-        return () => {
-            // clean up
-        };
     }, []);
 
     const deletePost = async (id: number) => {
@@ -31,37 +25,36 @@ const Posts = () => {
     }
 
     return (
-        <div className='flex columns-2 h-full'>
-            <Sidebar />
-            <main className='m-4'>
+        <Layout>
+            <div className="flex justify-between">
                 <h1>All Posts</h1>
-
-                {loading ? <div>loading...</div> : (
-                    <div className='flex flex-wrap'>
-                        {posts.map((post) => (
-                            <div key={post._id} className='w-full my-2 p-4 border border-solid hover:border-dotted border-slate-200'>
-                                <div className="flex">
-                                    <Link href={`/dashboard/posts/edit?id=${post._id}`}>
-                                        <a className='block w-full h-full'>
-                                            {post.title}
-                                        </a>
-                                    </Link>
-                                    <button className='text-red-500' onClick={() => deletePost(post._id)}>
-                                        <RiDeleteBin2Line />
-                                    </button>
-                                </div>
-                                {post?.createdAt && <div className='block text-xs text-slate-400'>Posted on: {new Date(post?.createdAt).toLocaleDateString('en-us', { year: "numeric", month: "short", day: "numeric" })}</div>}
-                            </div>
-                        ))}
-                    </div>
-                )}
-
-
                 <div className='my-2'>
-                    <Link href="/dashboard/posts/create"><button>Add Post</button></Link>
+                    <Link href="/dashboard/posts/create">
+                        <button className='inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>Add Post</button>
+                    </Link>
                 </div>
-            </main>
-        </div>
+            </div>
+
+            {loading ? <div>loading...</div> : (
+                <div className='flex flex-wrap'>
+                    {posts.map((post) => (
+                        <div key={post._id} className='w-full my-2 p-4 border border-solid hover:border-dotted border-slate-200'>
+                            <div className="flex">
+                                <Link href={`/dashboard/posts/edit?id=${post._id}`}>
+                                    <a className='block w-full h-full'>
+                                        {post.title}
+                                    </a>
+                                </Link>
+                                <button className='text-red-500' onClick={() => deletePost(post._id)}>
+                                    <RiDeleteBin2Line />
+                                </button>
+                            </div>
+                            {post?.createdAt && <div className='block text-xs text-slate-400'>Posted on: {new Date(post?.createdAt).toLocaleDateString('en-us', { year: "numeric", month: "short", day: "numeric" })}</div>}
+                        </div>
+                    ))}
+                </div>
+            )}
+        </Layout>
     )
 }
 

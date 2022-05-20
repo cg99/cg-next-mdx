@@ -1,24 +1,32 @@
 import React from 'react'
 import Image from 'next/image'
 
-const Blog = () => {
+const Blog = ({ post }) => {
+
     return (
-        <div className='p-6 m-2 rounded-lg shadow-lg hover:shadow-gray-400'>
+        <div className='p-6 m-2 mt-4 rounded-lg shadow-lg hover:shadow-gray-400 relative'>
             <a href="#">
-                <Image src="/vercel.svg" width={100} height={100} />
+                <div className='w-full h-48 relative'>
+                    <Image src={post?.featuredImage ? ("/uploads/" + post?.featuredImage) : '/images/placeholder.webp'}
+                        layout='fill'
+                        objectFit='cover'
+                        alt={post.title}
+                        priority
+                    />
+                </div>
 
-                <h3 className='text-md text-blue-700 my-2'>Category</h3>
+                <h3 className='text-md text-blue-700 my-2'>{post?.category}</h3>
 
-                <h2 className='text-2xl font-bold'>The title of the post</h2>
+                <h2 className='text-2xl font-bold'>{post.title}</h2>
 
-                <p className='text-slate-500 my-2'>
-                    Registration can be helpful in many ways such as registering a new user, survey and so on. This project is an online registration system using PHP and MySQL.
-                </p>
+                <div className='text-slate-500 my-2'>
+                    {/* <div dangerouslySetInnerHTML={{ __html: (post?.content).replace(/<img .*?>/g, "").substr(0, 150) }}></div> */}
+                </div>
 
                 <div>
                     <div className="author">codegenius</div>
                     <div className='text-slate-500'>
-                        December 8, 2021
+                        {post?.createdAt}
                     </div>
                 </div>
             </a>

@@ -5,6 +5,7 @@ const postSchema = new mongoose.Schema(
     title: String,
     content: String,
     featuredImage: String,
+    category: String,
   },
   {
     timestamps: true,

@@ -1,0 +1,12 @@
+.main {
+    width: calc(100vh - 200px);
+    left: 200px;
+    position: relative;
+}
+
+.sidebar {
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+}

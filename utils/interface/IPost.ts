@@ -5,5 +5,6 @@ export interface IPost {
   title: string;
   content?: string;
   featuredImage?: string;
+  category?: string;
   createdAt?: Date;
 }

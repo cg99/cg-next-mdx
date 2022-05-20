@@ -1,15 +1,12 @@
 import { NextPage } from 'next'
 import React from 'react'
-import Sidebar from '../components/dashboard/Sidebar'
+import Layout from '../components/dashboard/Layout'
 
 const dashboard: NextPage = () => {
     return (
-        <div className='flex columns-2 h-full'>
-            <Sidebar />
-            <main>
-                <h1>Dashboard</h1>
-            </main>
-        </div>
+        <Layout>
+            <h1>Dashboard</h1>
+        </Layout>
     )
 }
 
