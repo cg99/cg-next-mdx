@@ -1,7 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 
-const Blog = ({ post }) => {
+const Posts = ({ post }) => {
 
     return (
         <div className='p-6 m-2 mt-4 rounded-lg shadow-lg hover:shadow-gray-400 relative'>
@@ -34,4 +34,4 @@ const Blog = ({ post }) => {
     )
 }
 
-export default Blog
+export default Posts

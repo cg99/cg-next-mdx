@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { IPost } from '../utils/interface/IPost';
-import Blog from './Blog'
+import Posts from './Posts'
 
 const FrontPage = () => {
     const [posts, setPosts] = useState<IPost[]>([]);
@@ -22,7 +22,7 @@ const FrontPage = () => {
             <div className="grid md:grid-cols-3 sm:grid-cols-2 gap-4">
                 {
                     loading ? <div>Loading...</div> : posts.map(post =>
-                        <Blog key={post._id} post={post} />
+                        <Posts key={post._id} post={post} />
                     )
                 }
             </div>
