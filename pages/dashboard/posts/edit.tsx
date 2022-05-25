@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Formik } from 'formik';
+import { Form, Formik } from 'formik';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
@@ -8,6 +8,8 @@ import "react-quill/dist/quill.snow.css";
 import Layout from '../../../components/dashboard/Layout';
 import Toast from '../../../components/Toast';
 import { IPost } from '../../../utils/interface/IPost';
+import InputField from '../../../components/dashboard/posts/form/InputField';
+import ImageInput from '../../../components/dashboard/posts/form/ImageInput';
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
     ssr: false,
@@ -16,14 +18,14 @@ const QuillNoSSRWrapper = dynamic(import('react-quill'), {
 
 
 const EditPost = () => {
-
-    const [uploadedFeaturedImage, setUploadedFeaturedImage] = useState(null)
-
-    const fileInputRef = useRef<HTMLInputElement>(null);
-
-    const [postContent, setPostContent] = useState("");
-
-    const [postUpdated, setPostUpdated] = useState(false);
+    const [post, setPost] = useState({
+        title: '',
+        slug: '',
+        content: '',
+        category: '',
+        featuredImage: null,
+        postUpdated: false,
+    });
 
     const modules = {
         toolbar: [
@@ -42,20 +44,20 @@ const EditPost = () => {
         'link', 'image'
     ];
 
-    const [post, setPost] = useState<IPost | null>(null);
-
     const router = useRouter();
     const postId = router.query?.id;
 
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (postId) {
             const fetchPost = async () => {
                 const res = await axios.get(`/api/posts/?id=${postId}`);
                 const postData = res.data.post;
-                setPost(postData);
-                setUploadedFeaturedImage(postData.featuredImage);
-                setPostContent(postData.content);
+
+                setPost({ ...post, ...postData });
+
+                setLoading(false);
             }
             fetchPost();
         }
@@ -64,10 +66,10 @@ const EditPost = () => {
     return (
         <Layout>
 
-            {postUpdated && <Toast message='Post updated successfully.' type='success' />}
+            {post.postUpdated && <Toast message='Post updated successfully.' type='success' />}
 
-            {post && <Formik
-                initialValues={{ title: post?.title || '', content: post?.content || '', category: post?.category || '', featuredImage: post?.featuredImage || '' }}
+            {!loading && <Formik
+                initialValues={{ title: post?.title || '', slug: post?.slug || '', content: post?.content || '', category: post?.category || '', featuredImage: post?.featuredImage || '' }}
                 validate={values => {
                     const errors: any = {};
                     if (!values.title) {
@@ -77,11 +79,11 @@ const EditPost = () => {
                 }}
                 onSubmit={async (values, { setSubmitting }) => {
 
-                    const bodyContent = { ...values, content: postContent, featuredImage: uploadedFeaturedImage }
+                    const bodyContent = { ...values, content: post.content, featuredImage: post.featuredImage }
                     await axios.post('/api/posts/?id=' + postId, bodyContent)
                         .then(res => {
                             if (res.data.success === true) {
-                                setPostUpdated(true)
+                                setPost({ ...res.data.post, postUpdated: true });
                             } else {
                                 console.error('error', res.data)
                             }
@@ -111,130 +113,64 @@ const EditPost = () => {
                             </div>
                         </div>
                         <div className="mt-5 md:mt-0 md:col-span-2">
-                            <form onSubmit={handleSubmit} method="POST">
+                            <Form onSubmit={handleSubmit} method="POST">
                                 <div className="shadow sm:rounded-md sm:overflow-hidden">
                                     <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
-
                                         {/* post title */}
-                                        <div className="grid grid-cols-3 gap-6">
-                                            <div className="col-span-3 sm:col-span-2">
-                                                <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-                                                    Post Title
-                                                </label>
-                                                <div className="mt-1 flex rounded-md shadow-sm">
-                                                    <input
-                                                        id="title"
-                                                        className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
-                                                        placeholder="Enter your Post Title"
-                                                        type="text"
-                                                        name="title"
-                                                        onChange={handleChange}
-                                                        onBlur={handleBlur}
-                                                        value={values.title}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {errors.title && touched.title && errors.title}
+                                        <InputField
+                                            fieldname='title'
+                                            label='Post Title'
+                                            type='text'
+                                            handleChange={(e) => {
+                                                handleChange(e);
+                                                setFieldValue('slug', values.title.replace(/\s+/g, '-').toLowerCase());
+                                            }}
+                                            value={values.title}
+                                            handleBlur={handleBlur}
+                                            values={values}
+                                            errors={errors}
+                                            touched={touched}
+                                            setFieldValue={setFieldValue}
+                                        />
+
+                                        {/* post slug */}
+                                        <InputField
+                                            fieldname='slug'
+                                            label='URL'
+                                            type='text'
+                                            handleChange={handleChange}
+                                            handleBlur={handleBlur}
+                                            values={values}
+                                            errors={errors}
+                                            touched={touched}
+                                            setFieldValue={setFieldValue}
+                                            value={values.slug}
+                                        />
 
                                         <QuillNoSSRWrapper
                                             theme="snow"
-                                            onChange={v => setPostContent(v)}
-                                            value={postContent}
+                                            onChange={v => setPost({ ...post, content: v })}
+                                            value={post.content}
                                             modules={modules}
                                             formats={formats} />
 
-
                                         {/* featured Image */}
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700">Featured Image</label>
+                                        <ImageInput post={post} setPost={setPost} handleBlur={handleBlur} />
 
-                                            {uploadedFeaturedImage ?
-                                                <div className='block'>
-                                                    <div>
-                                                        <Image src={`/uploads/${uploadedFeaturedImage}`}
-                                                            width={300} height={250}
-                                                            alt="Featured Image"
-                                                        />
-                                                    </div>
-                                                    <button className="px-4 py-1 text-sm text-red-600 font-semibold rounded-full border border-red-200 hover:text-white hover:bg-red-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2"
-                                                        onClick={() => setUploadedFeaturedImage(null)}
-                                                    >Remove</button>
-                                                </div> :
-                                                (<div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                                                    <div className="space-y-1 text-center">
-                                                        <svg
-                                                            className="mx-auto h-12 w-12 text-gray-400"
-                                                            stroke="currentColor"
-                                                            fill="none"
-                                                            viewBox="0 0 48 48"
-                                                            aria-hidden="true"
-                                                        >
-                                                            <path
-                                                                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                                                strokeWidth={2}
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                            />
-                                                        </svg>
-                                                        <div className="flex text-sm text-gray-600">
-                                                            <label
-                                                                htmlFor="featuredImage"
-                                                                className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
-                                                            >
-                                                                <span onClick={() => fileInputRef.current && fileInputRef.current.click()}>Upload a file</span>
-                                                                <input
-                                                                    ref={fileInputRef}
-                                                                    className='sr-only'
-                                                                    type="file"
-                                                                    onChange={async (event) => {
-                                                                        let file = event.target.files![0];
-
-                                                                        let fd = new FormData()
-                                                                        fd.append('image', file)
-
-                                                                        // console.log('file being uploaded', fd);
-
-                                                                        await axios.post('/api/posts/images', fd)
-                                                                            .then(res => {
-                                                                                const fileName = res.data.filename;
-                                                                                setUploadedFeaturedImage(fileName);
-                                                                            })
-                                                                            .catch(err => console.log(err));
-
-                                                                    }}
-                                                                    onBlur={handleBlur}
-                                                                // value={featuredImageInput.file}
-                                                                />     </label>
-                                                            <p className="pl-1">or drag and drop</p>
-                                                        </div>
-                                                        <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
-                                                    </div>
-                                                </div>)}
-                                        </div>
 
                                         {/* post category */}
-                                        <div className="grid grid-cols-3 gap-6">
-                                            <div className="col-span-3 sm:col-span-2">
-                                                <label htmlFor="category" className="block text-sm font-medium text-gray-700">
-                                                    Category
-                                                </label>
-                                                <div className="mt-1 flex rounded-md shadow-sm">
-                                                    <input
-                                                        id="category"
-                                                        className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
-                                                        placeholder="Enter your Post category"
-                                                        type="text"
-                                                        name="category"
-                                                        onChange={handleChange}
-                                                        onBlur={handleBlur}
-                                                        value={values.category}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {errors.category && touched.category && errors.category}
-
+                                        <InputField
+                                            fieldname='category'
+                                            label='Enter Category'
+                                            type='text'
+                                            handleChange={handleChange}
+                                            handleBlur={handleBlur}
+                                            values={values}
+                                            errors={errors}
+                                            touched={touched}
+                                            setFieldValue={setFieldValue}
+                                            value={values.category}
+                                        />
 
                                     </div>
 
@@ -248,7 +184,7 @@ const EditPost = () => {
                                         </button>
                                     </div>
                                 </div>
-                            </form>
+                            </Form>
                         </div>
                     </>
                 )}
