@@ -8,6 +8,7 @@ import Toast from '../../../components/Toast';
 import Router from 'next/router';
 import ImageInput from '../../../components/dashboard/posts/form/ImageInput';
 import InputField from '../../../components/dashboard/posts/form/InputField';
+import slugify from 'slugify';
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
     ssr: false,
@@ -105,12 +106,12 @@ const AddPost = () => {
                                             fieldname='title'
                                             label='Post Title'
                                             type='text'
-                                            handleChange={(e) => {
-                                                handleChange(e);
-                                                setFieldValue('slug', values.title.replace(/\s+/g, '-').toLowerCase());
-                                            }}
                                             value={values.title}
-                                            handleBlur={handleBlur}
+                                            handleChange={handleChange}
+                                            handleBlur={() => {
+                                                const slug = slugify(values.title, { lower: true });
+                                                setFieldValue('slug', slug);
+                                            }}
                                             values={values}
                                             errors={errors}
                                             touched={touched}

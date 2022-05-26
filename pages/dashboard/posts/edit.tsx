@@ -10,6 +10,7 @@ import Toast from '../../../components/Toast';
 import { IPost } from '../../../utils/interface/IPost';
 import InputField from '../../../components/dashboard/posts/form/InputField';
 import ImageInput from '../../../components/dashboard/posts/form/ImageInput';
+import slugify from 'slugify';
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
     ssr: false,
@@ -121,12 +122,12 @@ const EditPost = () => {
                                             fieldname='title'
                                             label='Post Title'
                                             type='text'
-                                            handleChange={(e) => {
-                                                handleChange(e);
-                                                setFieldValue('slug', values.title.replace(/\s+/g, '-').toLowerCase());
-                                            }}
+                                            handleChange={handleChange}
                                             value={values.title}
-                                            handleBlur={handleBlur}
+                                            handleBlur={() => {
+                                                const slug = slugify(values.title, { lower: true });
+                                                setFieldValue('slug', slug);
+                                            }}
                                             values={values}
                                             errors={errors}
                                             touched={touched}
@@ -134,7 +135,7 @@ const EditPost = () => {
                                         />
 
                                         {/* post slug */}
-                                        <InputField
+                                        {values.slug && <InputField
                                             fieldname='slug'
                                             label='URL'
                                             type='text'
@@ -145,7 +146,7 @@ const EditPost = () => {
                                             touched={touched}
                                             setFieldValue={setFieldValue}
                                             value={values.slug}
-                                        />
+                                        />}
 
                                         <QuillNoSSRWrapper
                                             theme="snow"

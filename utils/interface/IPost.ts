@@ -1,5 +1,3 @@
-import { ObjectId } from "mongodb";
-
 export interface IPost {
   _id: number;
   title: string;

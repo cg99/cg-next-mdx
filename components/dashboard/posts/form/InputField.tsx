@@ -12,7 +12,7 @@ const InputField = ({ handleChange, setFieldValue, values, handleBlur, errors, t
                     <div className="mt-1 flex rounded-md shadow-sm">
                         <Field
                             id={fieldname}
-                            className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
+                            className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-sm py-2 px-3 text-gray-700 leading-tight focus:outline-none"
                             placeholder={`Enter your ${label}`}
                             type={type}
                             name={fieldname}

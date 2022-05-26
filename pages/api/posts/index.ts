@@ -2,37 +2,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import nc from "next-connect";
 import connectDB from "../../../utils/db";
 import Post from "../../../models/Post";
-import { ObjectId } from "mongodb";
-import mongoose from "mongoose";
-
-// const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-//   const { method } = req;
-
-//   switch (method) {
-//     case "GET":
-//       try {
-//         const posts = await Post.find();
-//         return res.status(200).json({ posts });
-//       } catch (error: any) {
-//         return res.status(500).json({ message: error.message });
-//       }
-//       break;
-//     case "POST":
-//       res.status(200).json({ message: "POST" });
-//       break;
-//     case "PATCH":
-//       res.status(200).json({ message: "PATCH" });
-//       break;
-//     case "PUT":
-//       res.status(200).json({ message: "PUT" });
-//       break;
-//     case "DELETE":
-//       res.status(200).json({ message: "DELETE" });
-//       break;
-//     default:
-//       res.status(404).json({ message: "Not found" });
-//   }
-// };
 
 export function withAuth(
   req: NextApiRequest,
@@ -58,6 +27,12 @@ const handler = nc()
   .get(async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const postId = req.query.id;
+
+      const slug = req.query.slug;
+      if (slug) {
+        const post = await Post.findOne({ slug });
+        return res.status(200).json({ post });
+      }
 
       if (postId) {
         const post = await Post.findById(postId);
