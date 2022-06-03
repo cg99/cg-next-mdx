@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 const Posts = ({ post }) => {
 
@@ -17,7 +18,12 @@ const Posts = ({ post }) => {
 
                 <h3 className='text-md text-blue-700 my-2'>{post?.category}</h3>
 
-                <h2 className='text-2xl font-bold'>{post.title}</h2>
+                <Link href={{
+                    pathname: '/posts/[id]',
+                    query: { id: post._id },
+                }}>
+                    <h2 className='text-2xl font-bold'>{post.title}</h2>
+                </Link>
 
                 <div className='text-slate-500 my-2'>
                     {/* <div dangerouslySetInnerHTML={{ __html: (post?.content).replace(/<img .*?>/g, "").substr(0, 150) }}></div> */}
