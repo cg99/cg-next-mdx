@@ -46,15 +46,43 @@ const SinglePost = ({ post }) => {
     )
 }
 
+
+export async function getStaticPaths() {
+    const res = await axios.get('/api/posts')
+        .then(result => result.data)
+        .catch(err => console.log(err));
+
+    console.log('fuck', res);
+
+    const posts = res?.posts;
+
+    const paths = posts.map(post => ({
+        params: {
+            id: post._id,
+        }
+    }))
+
+    return {
+        paths,
+        fallback: false
+    }
+}
+
 export const getStaticProps: GetStaticProps = async ({ params }) => {
     const postId = params?.id;
 
+    console.log(postId);
+
     if (postId !== null) {
-        const res = await axios.get(`/api/posts/${postId}`).then(res => res.data);
+        const res = await axios.get(`/api/posts/${postId}`)
+            .then(res => res.data)
+            .catch(err => console.log(err));
+
         const post = res?.post;
+
         return {
             props: {
-                post
+                post: post ? post : null
             }
         }
     } else {
@@ -63,22 +91,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
                 post: null
             }
         }
-    }
-}
-
-export const getStaticPaths: GetStaticPaths = async () => {
-    const res = await axios.get('/api/posts').then(res => res.data);
-    console.log(res);
-    const posts = res?.posts;
-
-    const paths = posts.map(post => ({
-        params: {
-            id: post._id
-        }
-    }))
-    return {
-        paths,
-        fallback: false
     }
 }
 

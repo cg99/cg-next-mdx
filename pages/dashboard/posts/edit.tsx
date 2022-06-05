@@ -53,7 +53,7 @@ const EditPost = () => {
     useEffect(() => {
         if (postId) {
             const fetchPost = async () => {
-                const res = await axios.get(`/api/posts/?id=${postId}`);
+                const res = await axios.get(`/api/posts/${postId}`);
                 const postData = res.data.post;
 
                 setPost({ ...post, ...postData });

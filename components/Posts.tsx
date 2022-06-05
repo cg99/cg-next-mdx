@@ -18,10 +18,7 @@ const Posts = ({ post }) => {
 
                 <h3 className='text-md text-blue-700 my-2'>{post?.category}</h3>
 
-                <Link href={{
-                    pathname: '/posts/[id]',
-                    query: { id: post._id },
-                }}>
+                <Link href={`/posts/${post._id}`}>
                     <h2 className='text-2xl font-bold'>{post.title}</h2>
                 </Link>
 

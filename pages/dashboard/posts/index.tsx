@@ -12,7 +12,7 @@ const Posts = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             const res = await axios.get('/api/posts');
-            // console.log(res.data);
+            console.log(res.data);
             setPosts(res.data.posts);
             setLoading(false);
         }

@@ -26,20 +26,6 @@ const handler = nc()
   // .use(withAuth)
   .get(async (req: NextApiRequest, res: NextApiResponse) => {
     try {
-      const postId = req.query.id;
-      // const slug = req.query?.slug;
-      console.log(postId);
-
-      if (postId) {
-        const post = await Post.findById(postId);
-        return res.status(200).json({ post });
-      }
-
-      // if (slug) {
-      //   const post = await Post.findOne({ slug });
-      //   return res.status(200).json({ post });
-      // }
-
       const posts = await Post.find();
       return res.status(200).json({ posts });
     } catch (error: any) {
