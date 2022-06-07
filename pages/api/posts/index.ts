@@ -3,16 +3,6 @@ import nc from "next-connect";
 import connectDB from "../../../utils/db";
 import Post from "../../../models/Post";
 
-export function withAuth(
-  req: NextApiRequest,
-  res: NextApiResponse,
-  next: () => any
-) {
-  if (!req.headers.authentication) {
-    res.status(401).json({ name: "Error" });
-  }
-  return next();
-}
 
 export const config = {
   api: {
