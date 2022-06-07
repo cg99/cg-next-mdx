@@ -12,38 +12,36 @@ import mongoose, { ConnectOptions } from 'mongoose';
 
 const SinglePost = ({ post }) => {
 
-    const [loading, setLoading] = useState(true);
+    const parsedPost = JSON.parse(post)
 
     return (
         <>
             <h1>Post</h1>
             <Suspense fallback={<div>Loading</div>}>
                 <div className='p-6 m-2 mt-4 rounded-lg shadow-lg hover:shadow-gray-400 relative'>
-                    <a href="#">
-                        <div className='w-full h-48 relative'>
-                            <Image src={post?.featuredImage ? ("/uploads/" + post?.featuredImage) : '/images/placeholder.webp'}
-                                layout='fill'
-                                objectFit='cover'
-                                alt={post?.title}
-                                priority
-                            />
+                    <div className='w-full h-48 relative'>
+                        <Image src={parsedPost?.featuredImage ? ("/uploads/" + parsedPost?.featuredImage) : '/images/placeholder.webp'}
+                            layout='fill'
+                            objectFit='cover'
+                            alt={parsedPost?.title}
+                            priority
+                        />
+                    </div>
+
+                    <h3 className='text-md text-blue-700 my-2'>{parsedPost?.category}</h3>
+
+                    <h2 className='text-2xl font-bold'>{parsedPost?.title}</h2>
+
+                    <div className='text-slate-500 my-2'>
+                        {DOMPurify.sanitize(parsedPost?.content)}
+                    </div>
+
+                    <div>
+                        <div className="author">codegenius</div>
+                        <div className='text-slate-500'>
+                            {parsedPost?.createdAt}
                         </div>
-
-                        <h3 className='text-md text-blue-700 my-2'>{post?.category}</h3>
-
-                        <h2 className='text-2xl font-bold'>{post.title}</h2>
-
-                        <div className='text-slate-500 my-2'>
-                            {DOMPurify.sanitize(post?.content)}
-                        </div>
-
-                        <div>
-                            <div className="author">codegenius</div>
-                            <div className='text-slate-500'>
-                                {post?.createdAt}
-                            </div>
-                        </div>
-                    </a>
+                    </div>
                 </div>
             </Suspense>
         </>
@@ -51,10 +49,6 @@ const SinglePost = ({ post }) => {
 }
 
 export async function getStaticPaths() {
-    // const res = await axios.get('/api/posts')
-    //     .then(result => result.data)
-    //     .catch(err => console.log(err));
-
 
     // Use new db connection
     await mongoose
@@ -100,9 +94,11 @@ export async function getStaticPaths() {
 
     const posts = await Post.find();
 
+    mongoose.disconnect();
+
     const paths = posts ? posts.map(post => ({
         params: {
-            id: post._id,
+            id: post?._id.toString(),
         }
     })) : [];
 
@@ -118,11 +114,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     console.log(postId);
 
     if (postId !== null) {
-        // const res = await axios.get(`/api/posts/${postId}`)
-        //     .then(res => res.data)
-        //     .catch(err => console.log(err));
-
-        // const post = res?.post;
 
         if (!mongoose.connections[0].readyState) {
             // Use new db connection
@@ -148,9 +139,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
         const post = await Post.findById(postId);
 
+        mongoose.disconnect();
+
         return {
             props: {
-                post: post ? post : null
+                post: post ? JSON.stringify(post) : null
             }
         }
     } else {
