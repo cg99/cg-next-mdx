@@ -1,26 +1,27 @@
-import axios from 'axios';
+import mongoose, { ConnectOptions } from 'mongoose';
+import { GetStaticProps } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { Suspense, useEffect, useState } from 'react';
-import { IPost } from '../../utils/interface/IPost';
-const DOMPurify = require('isomorphic-dompurify');
-import { GetStaticPaths, GetStaticProps } from 'next'
-import Post from '../../models/Post';
-import connectDB from '../../utils/db';
-import mongoose, { ConnectOptions } from 'mongoose';
-import Layout from '../../components/dashboard/Layout';
+import { Suspense } from 'react';
+import { MdArrowBack } from 'react-icons/md';
 import Template from '../../components/Template';
+import Post from '../../models/Post';
+const DOMPurify = require('isomorphic-dompurify');
 
 
 const SinglePost = ({ post }) => {
-
     const parsedPost = JSON.parse(post);
+
+    const router = useRouter()
 
     return (
         <Template>
-            <h1>Post</h1>
+            <button className="rounded-full" onClick={() => router.back()}>
+                <MdArrowBack />
+            </button>
+
             <Suspense fallback={<div>Loading</div>}>
-                <div className='p-6 m-2 mt-4 rounded-lg shadow-lg hover:shadow-gray-400 relative'>
+                <div className='p-6 m-2 mt-4 shadow-sm relative'>
                     <div className='w-full h-48 relative'>
                         <Image src={parsedPost?.featuredImage ? ("/uploads/" + parsedPost?.featuredImage) : '/images/placeholder.webp'}
                             layout='fill'
@@ -46,7 +47,7 @@ const SinglePost = ({ post }) => {
                     </div>
                 </div>
             </Suspense>
-        </Template>
+        </Template >
     )
 }
 
@@ -112,8 +113,6 @@ export async function getStaticPaths() {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
     const postId = params?.id;
-
-    console.log(postId);
 
     if (postId !== null) {
 
