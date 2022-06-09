@@ -8,14 +8,16 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import Post from '../../models/Post';
 import connectDB from '../../utils/db';
 import mongoose, { ConnectOptions } from 'mongoose';
+import Layout from '../../components/dashboard/Layout';
+import Template from '../../components/Template';
 
 
 const SinglePost = ({ post }) => {
 
-    const parsedPost = JSON.parse(post)
+    const parsedPost = JSON.parse(post);
 
     return (
-        <>
+        <Template>
             <h1>Post</h1>
             <Suspense fallback={<div>Loading</div>}>
                 <div className='p-6 m-2 mt-4 rounded-lg shadow-lg hover:shadow-gray-400 relative'>
@@ -33,7 +35,7 @@ const SinglePost = ({ post }) => {
                     <h2 className='text-2xl font-bold'>{parsedPost?.title}</h2>
 
                     <div className='text-slate-500 my-2'>
-                        {DOMPurify.sanitize(parsedPost?.content)}
+                        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(parsedPost?.content) }} />
                     </div>
 
                     <div>
@@ -44,7 +46,7 @@ const SinglePost = ({ post }) => {
                     </div>
                 </div>
             </Suspense>
-        </>
+        </Template>
     )
 }
 
