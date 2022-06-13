@@ -3,7 +3,6 @@ import nc from "next-connect";
 import connectDB from "../../../utils/db";
 import Post from "../../../models/Post";
 
-
 export const config = {
   api: {
     bodyParser: {
@@ -16,10 +15,12 @@ const handler = nc()
   // .use(withAuth)
   .get(async (req: NextApiRequest, res: NextApiResponse) => {
     try {
-      const posts = await Post.find();
-      return res.status(200).json({ posts });
+      const posts = await Post.find().sort({ createdAt: -1 });
+      return res
+        .status(200)
+        .json({ success: true, message: "Get Posts Successful", posts });
     } catch (error: any) {
-      return res.status(500).json({ message: error.message });
+      return res.status(500).json({ success: false, message: error.message });
     }
   })
   .post(async (req: NextApiRequest, res: NextApiResponse) => {

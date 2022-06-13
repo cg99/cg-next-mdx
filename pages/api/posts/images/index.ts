@@ -59,7 +59,7 @@ const handler = nc()
     async (req: NextApiRequest, res: NextApiResponse) => {
       return res
         .status(201)
-        .json({ msg: "Image Uploaded", filename: savedImageName });
+        .json({ message: "Image Uploaded", filename: savedImageName });
     }
   );
 

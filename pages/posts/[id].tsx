@@ -16,7 +16,7 @@ const SinglePost = ({ post }) => {
 
     return (
         <Template>
-            <button className="rounded-full" onClick={() => router.back()}>
+            <button className="rounded-full text-4xl" onClick={() => router.back()}>
                 <MdArrowBack />
             </button>
 

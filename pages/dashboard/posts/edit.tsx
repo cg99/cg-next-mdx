@@ -11,6 +11,7 @@ import { IPost } from '../../../utils/interface/IPost';
 import InputField from '../../../components/dashboard/posts/form/InputField';
 import ImageInput from '../../../components/dashboard/posts/form/ImageInput';
 import slugify from 'slugify';
+import { NextPage } from 'next';
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
     ssr: false,
@@ -18,15 +19,8 @@ const QuillNoSSRWrapper = dynamic(import('react-quill'), {
 })
 
 
-const EditPost = () => {
-    const [post, setPost] = useState({
-        title: '',
-        slug: '',
-        content: '',
-        category: '',
-        featuredImage: null,
-        postUpdated: false,
-    });
+const EditPost: NextPage = () => {
+    const [post, setPost] = useState<IPost | null>(null);
 
     const modules = {
         toolbar: [
@@ -52,24 +46,26 @@ const EditPost = () => {
 
     useEffect(() => {
         if (postId) {
-            const fetchPost = async () => {
-                const res = await axios.get(`/api/posts/${postId}`);
-                const postData = res.data.post;
-
-                setPost({ ...post, ...postData });
-
-                setLoading(false);
-            }
-            fetchPost();
+            (async () => {
+                await axios.get(`/api/posts/${postId}`)
+                    .then(res => {
+                        const postData = res.data?.post;
+                        setPost({ ...post, ...postData });
+                        setLoading(false);
+                    }).catch(err => {
+                        console.log(err);
+                    });
+            })();
         }
+
     }, [postId]);
 
     return (
         <Layout>
 
-            {post.postUpdated && <Toast message='Post updated successfully.' type='success' />}
+            {post?.postUpdated && <Toast message='Post updated successfully.' type='success' />}
 
-            {!loading && <Formik
+            {!loading && post && <Formik
                 initialValues={{ title: post?.title || '', slug: post?.slug || '', content: post?.content || '', category: post?.category || '', featuredImage: post?.featuredImage || '' }}
                 validate={values => {
                     const errors: any = {};
@@ -80,11 +76,12 @@ const EditPost = () => {
                 }}
                 onSubmit={async (values, { setSubmitting }) => {
 
-                    const bodyContent = { ...values, content: post.content, featuredImage: post.featuredImage }
+                    const bodyContent = { ...values, content: post?.content, featuredImage: post?.featuredImage }
+
                     await axios.post('/api/posts/?id=' + postId, bodyContent)
                         .then(res => {
                             if (res.data.success === true) {
-                                setPost({ ...res.data.post, postUpdated: true });
+                                setPost({ ...post, postUpdated: true });
                             } else {
                                 console.error('error', res.data)
                             }
@@ -92,7 +89,6 @@ const EditPost = () => {
                         .catch(err => console.log(err));
 
                     setSubmitting(false);
-
                 }}
             >
                 {({
@@ -151,7 +147,7 @@ const EditPost = () => {
                                         <QuillNoSSRWrapper
                                             theme="snow"
                                             onChange={v => setPost({ ...post, content: v })}
-                                            value={post.content}
+                                            value={post?.content}
                                             modules={modules}
                                             formats={formats} />
 

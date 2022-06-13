@@ -70,7 +70,6 @@ const ImageInput = ({ post, setPost, handleBlur }) => {
                                                 })
                                             })
                                             .catch(err => console.log(err));
-
                                     }}
                                     onBlur={handleBlur}
                                 // value={featuredImageInput.file}

@@ -1,9 +1,11 @@
 export interface IPost {
-  _id: number;
+  _id: string | number;
   title: string;
-  slug?: string;
+  slug: string;
   content?: string;
   featuredImage?: string;
   category?: string;
   createdAt?: Date;
+  postUpdated?: boolean;
+  postCreated?: boolean;
 }
