@@ -6,8 +6,8 @@ import "react-quill/dist/quill.snow.css";
 import Layout from '../../../components/dashboard/Layout';
 import Toast from '../../../components/Toast';
 import Router from 'next/router';
-import ImageInput from '../../../components/dashboard/posts/form/ImageInput';
-import InputField from '../../../components/dashboard/posts/form/InputField';
+import ImageInput from '../../../components/dashboard/form/ImageInput';
+import InputField from '../../../components/dashboard/form/InputField';
 import slugify from 'slugify';
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {

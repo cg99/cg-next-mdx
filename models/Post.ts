@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const postSchema = new mongoose.Schema(
   {
@@ -6,7 +7,7 @@ const postSchema = new mongoose.Schema(
     slug: String,
     content: String,
     featuredImage: String,
-    category: String,
+    categories: [ObjectId],
   },
   {
     timestamps: true,

@@ -8,8 +8,8 @@ import "react-quill/dist/quill.snow.css";
 import Layout from '../../../components/dashboard/Layout';
 import Toast from '../../../components/Toast';
 import { IPost } from '../../../utils/interface/IPost';
-import InputField from '../../../components/dashboard/posts/form/InputField';
-import ImageInput from '../../../components/dashboard/posts/form/ImageInput';
+import InputField from '../../../components/dashboard/form/InputField';
+import ImageInput from '../../../components/dashboard/form/ImageInput';
 import slugify from 'slugify';
 import { NextPage } from 'next';
 
@@ -66,7 +66,7 @@ const EditPost: NextPage = () => {
             {post?.postUpdated && <Toast message='Post updated successfully.' type='success' />}
 
             {!loading && post && <Formik
-                initialValues={{ title: post?.title || '', slug: post?.slug || '', content: post?.content || '', category: post?.category || '', featuredImage: post?.featuredImage || '' }}
+                initialValues={{ title: post?.title || '', slug: post?.slug || '', content: post?.content || '', categories: post?.categories || '', featuredImage: post?.featuredImage || '' }}
                 validate={values => {
                     const errors: any = {};
                     if (!values.title) {
@@ -157,7 +157,7 @@ const EditPost: NextPage = () => {
 
                                         {/* post category */}
                                         <InputField
-                                            fieldname='category'
+                                            fieldname='categories'
                                             label='Enter Category'
                                             type='text'
                                             handleChange={handleChange}
@@ -166,7 +166,7 @@ const EditPost: NextPage = () => {
                                             errors={errors}
                                             touched={touched}
                                             setFieldValue={setFieldValue}
-                                            value={values.category}
+                                            value={values.categories}
                                         />
 
                                     </div>

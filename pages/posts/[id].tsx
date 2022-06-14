@@ -42,7 +42,11 @@ const SinglePost = ({ post }) => {
                     <div>
                         <div className="author">codegenius</div>
                         <div className='text-slate-500'>
-                            {parsedPost?.createdAt}
+                            {new Date(parsedPost?.createdAt).toLocaleDateString('en-AU', {
+                                day: 'numeric',
+                                month: 'short',
+                                year: 'numeric',
+                            })}
                         </div>
                     </div>
                 </div>

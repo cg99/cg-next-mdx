@@ -2,7 +2,7 @@ import axios from 'axios';
 import { NextPage } from 'next';
 import React, { useEffect, useState } from 'react'
 import { IPost } from '../utils/interface/IPost';
-import Posts from './Posts'
+import Post from './Post'
 
 const FrontPage: NextPage = () => {
     const [posts, setPosts] = useState<IPost[] | null>(null);
@@ -21,7 +21,7 @@ const FrontPage: NextPage = () => {
             <div className="grid md:grid-cols-3 sm:grid-cols-2 gap-4">
                 {
                     loading ? <div>Loading...</div> : posts?.map(post =>
-                        <Posts key={post._id} post={post} />
+                        <Post key={post._id} post={post} />
                     )
                 }
             </div>
