@@ -19,7 +19,7 @@ const Post = ({ post }) => {
 
                     <h3 className='text-md text-blue-700 my-2'>{post?.category}</h3>
 
-                    <h2 className='text-2xl font-bold'>{post.title}</h2>
+                    <h2 className='text-2xl font-bold hover:text-red-500'>{post.title}</h2>
 
                     <div className='text-slate-500 my-2'>
                         {/* <div dangerouslySetInnerHTML={{ __html: (post?.content).replace(/<img .*?>/g, "").substr(0, 150) }}></div> */}

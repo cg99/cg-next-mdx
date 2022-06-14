@@ -4,7 +4,6 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 const categorySchema = new mongoose.Schema({
   title: String,
   parent: ObjectId,
-  children: [ObjectId],
 });
 
 const Category =

@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import nc from "next-connect";
 import connectDB from "../../../utils/db";
-import Post from "../../../models/Post";
+// import Post from "../../../models/Post";
+import Category from "../../../models/Category";
 
 export const config = {
   api: {
@@ -14,31 +15,40 @@ export const config = {
 const handler = nc()
   // .use(withAuth)
   .get(async (req: NextApiRequest, res: NextApiResponse) => {
+    const categoryId = req.query.id;
+
     try {
-      const posts = await Post.find().sort({ createdAt: -1 });
-      return res
+      if (categoryId) {
+        const category = await Category.findById(categoryId);
+        res
+          .status(200)
+          .json({ success: true, message: "Get Post Successful", category });
+      }
+
+      const categories = await Category.find();
+      res
         .status(200)
-        .json({ success: true, message: "Get Posts Successful", posts });
+        .json({ success: true, message: "Get Posts Successful", categories });
     } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
+      res.status(500).json({ success: false, message: error.message });
     }
   })
   .post(async (req: NextApiRequest, res: NextApiResponse) => {
-    const postContent = req.body;
-    const postId = req.query.id;
+    const categoryContent = req.body;
+    const categoryId = req.query.id;
 
-    // console.log(postContent);
+    // console.log(categoryContent);
     try {
-      if (postId) {
-        // update post
-        const find = await Post.findById(postId);
-        if (find) {
-          const updatedPost = await Post.updateOne(
-            { _id: postId },
-            postContent
+      if (categoryId) {
+        // Update Category
+        const category = await Category.findById(categoryId);
+        if (category) {
+          const updatedCategory = await Category.updateOne(
+            { _id: categoryId },
+            categoryContent
           );
-          // console.log(updatedPost);
-          if (updatedPost.acknowledged) {
+          // console.log(updatedCategory);
+          if (updatedCategory.acknowledged) {
             return res.status(200).json({
               success: true,
               message: "Post updated successfully",
@@ -53,11 +63,11 @@ const handler = nc()
           message: "Failed to update. Post not found.",
         });
       } else {
-        // create post
-        const post = await Post.create(postContent);
-        const response = await post.save();
+        // create category
+        const category = await Category.create(categoryContent);
+        const response = await category.save();
         if (response) {
-          res.status(200).json({ success: true, post });
+          res.status(200).json({ success: true, category });
         }
         res.status(500).json({ success: false, message: "Failed to append" });
       }
@@ -67,7 +77,7 @@ const handler = nc()
   })
   .delete(async (req: NextApiRequest, res: NextApiResponse) => {
     try {
-      const response = await Post.deleteOne({ _id: req.query.id });
+      const response = await Category.deleteOne({ _id: req.query.id });
       if (response.deletedCount === 1) {
         res.status(200).json({ success: true });
       }

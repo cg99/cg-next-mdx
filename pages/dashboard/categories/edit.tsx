@@ -1,32 +1,49 @@
 import axios from 'axios';
 import { Field, Form, Formik } from 'formik';
-import Router from 'next/router';
+import Link from 'next/link';
+import Router, { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import InputField from '../../../components/dashboard/form/InputField';
 import Layout from '../../../components/dashboard/Layout';
 import Toast from '../../../components/Toast';
 import { ICategory } from '../../../utils/interface/ICategory';
 
-const AddCategory = () => {
+const EditCategory = () => {
 
     const [category, setCategory] = useState<ICategory | null>(null);
 
     const [categories, setCategories] = useState<ICategory[] | null>(null);
 
+    const router = useRouter();
+    const categoryId = router.query?.id;
+
+    const [loading, setLoading] = useState(true);
+
+
     useEffect(() => {
+        if (!categoryId) return;
+
         (async () => {
+            await axios.get('/api/categories?id=' + categoryId)
+                .then(res => {
+                    setCategory(res.data?.category);
+                    console.log(res.data?.category);
+                }).catch(err => console.log(err));
+
             const res = await axios.get('/api/categories');
             setCategories(res.data.categories);
+
+            setLoading(false);
         })();
-    }, []);
+    }, [categoryId]);
 
     return (
         <Layout>
 
-            {category?.categoryCreated && <Toast message='Category created successfully.' type='success' />}
+            {category?.categoryUpdated && <Toast message='Category updated successfully.' type='success' />}
 
-            <Formik
-                initialValues={{ title: '' }}
+            {!loading && category && <Formik
+                initialValues={{ title: category?.title, parent: category?.parent }}
                 validate={values => {
                     const errors: any = {};
                     if (!values.title) {
@@ -36,27 +53,21 @@ const AddCategory = () => {
                 }}
                 onSubmit={async (values, { setSubmitting }) => {
 
-                    const bodyContent = { ...values }
-                    const data = await axios.post('/api/categories', bodyContent)
+                    const bodyContent = { ...values };
+
+                    await axios.post('/api/categories?id=' + categoryId, bodyContent)
                         .then(res => {
                             if (res.data.success === true) {
-                                if (category) {
-                                    setCategory({
-                                        ...category, categoryCreated: true
-                                    });
-                                }
+                                setCategory({
+                                    ...category, categoryUpdated: true
+                                });
                             } else {
                                 console.error('error', res.data)
                             }
-                            return res.data.category;
                         })
                         .catch(err => console.log(err));
 
                     setSubmitting(false);
-
-                    console.log(data);
-
-                    Router.push('/dashboard/categories/edit?id=' + data._id);
                 }}
             >
                 {({
@@ -72,11 +83,16 @@ const AddCategory = () => {
                 }) => (
 
                     <>
-                        <div className="md:col-span-1">
-                            <div className="px-4 sm:px-0">
-                                <h3 className="text-lg font-medium leading-6 text-gray-900">Add New Category</h3>
+                        <div className="md:col-span-1 mb-4">
+                            <div className="columns-2 justify-between flex px-4 sm:px-0">
+                                <h3 className="text-lg font-medium leading-6 text-gray-900">Edit Category</h3>
+
+                                <Link href="/dashboard/categories/create">
+                                    <button className='inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500'>Add Another</button>
+                                </Link>
                             </div>
                         </div>
+
                         <div className="mt-5 md:mt-0 md:col-span-2">
                             <Form onSubmit={handleSubmit} method="POST">
                                 <div className="shadow sm:rounded-md sm:overflow-hidden">
@@ -95,14 +111,25 @@ const AddCategory = () => {
                                             touched={touched}
                                             setFieldValue={setFieldValue}
                                         />
+
                                         {categories &&
                                             <>
                                                 <label htmlFor="parentCategory" className="block text-sm font-medium text-gray-700">Parent</label>
+
                                                 <Field name="parent" as="select" id="parentCategory" className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-sm py-2 px-3 text-gray-700 leading-tight focus:outline-none">
-                                                    {categories.map((category) => (
-                                                        <option key={category._id} value={category._id}>
-                                                            {category.title}
-                                                        </option>)
+                                                    {!category.parent && <option selected> No Parent </option>}
+
+                                                    {categories.map((c) => {
+                                                        return (
+                                                            c?._id !== category._id &&
+                                                            <option
+                                                                key={c._id}
+                                                                value={c._id}
+                                                                selected={c?._id.toString() == category.parent}
+                                                            >
+                                                                {c.title}
+                                                            </option>)
+                                                    }
                                                     )}
                                                 </Field>
                                             </>
@@ -125,10 +152,10 @@ const AddCategory = () => {
                         </div>
                     </>
                 )}
-            </Formik>
+            </Formik>}
 
         </Layout >
     )
 }
 
-export default AddCategory
+export default EditCategory
