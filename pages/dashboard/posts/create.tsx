@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Form, Formik, useFormikContext } from 'formik';
+import { Field, Form, Formik, useFormikContext } from 'formik';
 import { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import "react-quill/dist/quill.snow.css";
@@ -9,6 +9,7 @@ import Router from 'next/router';
 import ImageInput from '../../../components/dashboard/form/ImageInput';
 import InputField from '../../../components/dashboard/form/InputField';
 import slugify from 'slugify';
+import { ICategory } from '../../../utils/interface/ICategory';
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
     ssr: false,
@@ -42,6 +43,15 @@ const AddPost = () => {
         'link', 'image'
     ];
 
+    const [categories, setCategories] = useState<ICategory[] | null>(null);
+
+    useEffect(() => {
+        (async () => {
+            const res = await axios.get('/api/categories');
+            setCategories(res.data.categories);
+        })();
+    }, []);
+
     return (
         <Layout>
 
@@ -49,7 +59,7 @@ const AddPost = () => {
             {post.postCreated && <Toast message='Post created successfully.' type='success' />}
 
             <Formik
-                initialValues={{ title: '', slug: '', content: '', category: '', featuredImage: post.uploadedFeaturedImage }}
+                initialValues={{ title: '', slug: '', content: '', category: [], featuredImage: post.uploadedFeaturedImage }}
                 validate={values => {
                     const errors: any = {};
                     if (!values.title) {
@@ -144,7 +154,7 @@ const AddPost = () => {
 
 
                                         {/* post category */}
-                                        <InputField
+                                        {/* <InputField
                                             fieldname='category'
                                             label='Enter Category'
                                             type='text'
@@ -155,7 +165,33 @@ const AddPost = () => {
                                             touched={touched}
                                             setFieldValue={setFieldValue}
                                             value={values.category}
-                                        />
+                                        /> */}
+                                        {categories &&
+                                            <>
+                                                <label htmlFor="postCategory" className="block text-sm font-medium text-gray-700">Category</label>
+                                                <Field
+                                                    name="catefory"
+                                                    as="select"
+                                                    multiple
+                                                    id="postCategory"
+                                                    className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-sm py-2 px-3 text-gray-700 leading-tight focus:outline-none">
+                                                    {categories.map((category) => (
+                                                        <option onClick={(e) => {
+                                                            const cat = values.category;
+                                                            cat.push(e.target.value);
+                                                            setFieldValue('category', cat)
+                                                            setCategories(categories.filter(c => c._id !== e.target.value))
+
+                                                            // console.log(values.category);
+                                                        }}
+                                                            key={category._id} value={category._id}>
+                                                            {category.title}
+                                                        </option>)
+                                                    )}
+                                                </Field>
+                                            </>
+                                        }
+
 
                                     </div>
 
