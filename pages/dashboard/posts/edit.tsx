@@ -12,6 +12,9 @@ import InputField from '../../../components/dashboard/form/InputField';
 import ImageInput from '../../../components/dashboard/form/ImageInput';
 import slugify from 'slugify';
 import { NextPage } from 'next';
+import Select from 'react-select';
+import { ICategory } from '../../../utils/interface/ICategory';
+
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
     ssr: false,
@@ -60,13 +63,30 @@ const EditPost: NextPage = () => {
 
     }, [postId]);
 
+    const [categories, setCategories] = useState<ICategory[] | null>(null);
+
+    useEffect(() => {
+        (async () => {
+            const res = await axios.get('/api/categories');
+            setCategories(res.data.categories);
+        })();
+    }, []);
+
+    const options = categories?.reduce((acc: { value: number | string, label: string }[], cat) => {
+        const obj = {
+            value: cat._id, label: cat.title
+        };
+        acc.push(obj);
+        return acc;
+    }, [])
+
     return (
         <Layout>
 
             {post?.postUpdated && <Toast message='Post updated successfully.' type='success' />}
 
             {!loading && post && <Formik
-                initialValues={{ title: post?.title || '', slug: post?.slug || '', content: post?.content || '', categories: post?.categories || '', featuredImage: post?.featuredImage || '' }}
+                initialValues={{ title: post?.title || '', slug: post?.slug || '', content: post?.content || '', category: post?.category || '', featuredImage: post?.featuredImage || '' }}
                 validate={values => {
                     const errors: any = {};
                     if (!values.title) {
@@ -155,9 +175,9 @@ const EditPost: NextPage = () => {
                                         <ImageInput post={post} setPost={setPost} handleBlur={handleBlur} />
 
 
-                                        {/* post category */}
+                                        {/* post category
                                         <InputField
-                                            fieldname='categories'
+                                            fieldname='category'
                                             label='Enter Category'
                                             type='text'
                                             handleChange={handleChange}
@@ -166,8 +186,27 @@ const EditPost: NextPage = () => {
                                             errors={errors}
                                             touched={touched}
                                             setFieldValue={setFieldValue}
-                                            value={values.categories}
-                                        />
+                                            value={values.category}
+                                        /> */}
+
+                                        <div className="selected-categories">
+                                            {post?.category?.map(cat => (
+                                                <span>{cat?.label}</span>
+                                            ))}
+                                        </div>
+                                        <div className="block h-full">
+                                            <Select
+                                                id="category-select"
+                                                instanceId="category-select"
+                                                name='category'
+                                                isMulti
+                                                className="basic-multi-select"
+                                                classNamePrefix="select"
+                                                onChange={(v) => {
+                                                    setFieldValue('category', v);
+                                                }}
+                                                options={options} />
+                                        </div>
 
                                     </div>
 

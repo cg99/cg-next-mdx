@@ -10,6 +10,7 @@ import ImageInput from '../../../components/dashboard/form/ImageInput';
 import InputField from '../../../components/dashboard/form/InputField';
 import slugify from 'slugify';
 import { ICategory } from '../../../utils/interface/ICategory';
+import Select from 'react-select';
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
     ssr: false,
@@ -21,7 +22,6 @@ const AddPost = () => {
 
     const [post, setPost] = useState({
         slug: '',
-        postContent: '',
         postCreated: false,
         uploadedFeaturedImage: null,
     });
@@ -52,6 +52,14 @@ const AddPost = () => {
         })();
     }, []);
 
+    const options = categories?.reduce((acc: { value: number | string, label: string }[], cat) => {
+        const obj = {
+            value: cat._id, label: cat.title
+        };
+        acc.push(obj);
+        return acc;
+    }, [])
+
     return (
         <Layout>
 
@@ -68,8 +76,9 @@ const AddPost = () => {
                     return errors;
                 }}
                 onSubmit={async (values, { setSubmitting }) => {
-
-                    const bodyContent = { ...values, content: post.postContent, featuredImage: post.uploadedFeaturedImage }
+                    console.log(values);
+                    // return;
+                    const bodyContent = { ...values, featuredImage: post.uploadedFeaturedImage }
                     const data = await axios.post('/api/posts', bodyContent)
                         .then(res => {
                             if (res.data.success === true) {
@@ -108,7 +117,7 @@ const AddPost = () => {
                         </div>
                         <div className="mt-5 md:mt-0 md:col-span-2">
                             <Form onSubmit={handleSubmit} method="POST">
-                                <div className="shadow sm:rounded-md sm:overflow-hidden">
+                                <div className="shadow sm:rounded-md">
                                     <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
 
                                         {/* post title */}
@@ -144,8 +153,7 @@ const AddPost = () => {
 
                                         <QuillNoSSRWrapper
                                             theme="snow"
-                                            onChange={v => setPost({ ...post, postContent: v })}
-                                            value={post.postContent}
+                                            onChange={v => setFieldValue('content', v)}
                                             modules={modules}
                                             formats={formats} />
 
@@ -166,32 +174,48 @@ const AddPost = () => {
                                             setFieldValue={setFieldValue}
                                             value={values.category}
                                         /> */}
-                                        {categories &&
-                                            <>
+                                        {/* {categories &&
+                                            <div>
                                                 <label htmlFor="postCategory" className="block text-sm font-medium text-gray-700">Category</label>
                                                 <Field
-                                                    name="catefory"
+                                                    name="category"
                                                     as="select"
                                                     multiple
                                                     id="postCategory"
-                                                    className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-sm py-2 px-3 text-gray-700 leading-tight focus:outline-none">
+                                                    // setFieldValue={setFieldValue}
+                                                    className="form-select appearance-none block shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 w-full sm:text-sm border border-gray-300 rounded-sm py-2 px-3 text-gray-700 leading-tight focus:outline-none text-base font-normal bg-white bg-clip-padding bg-no-repeat transition ease-in-out">
                                                     {categories.map((category) => (
-                                                        <option onClick={(e) => {
-                                                            const cat = values.category;
-                                                            cat.push(e.target.value);
-                                                            setFieldValue('category', cat)
-                                                            setCategories(categories.filter(c => c._id !== e.target.value))
+                                                        <option
+                                                            // onClick={(e) => {
+                                                            //     const cat = values.category;
+                                                            //     cat.push(e);
+                                                            //     setFieldValue('category', cat)
+                                                            //     setCategories(categories.filter(c => c._id !== e.target.value))
 
-                                                            // console.log(values.category);
-                                                        }}
+                                                            //     // console.log(values.category);
+                                                            // }}
                                                             key={category._id} value={category._id}>
                                                             {category.title}
                                                         </option>)
                                                     )}
                                                 </Field>
-                                            </>
+                                            </div>
                                         }
+                                         */}
 
+                                        <div className="block h-full">
+                                            <Select
+                                                id="category-select"
+                                                instanceId="category-select"
+                                                name='category'
+                                                isMulti
+                                                className="basic-multi-select"
+                                                classNamePrefix="select"
+                                                onChange={(v) => {
+                                                    setFieldValue('category', v);
+                                                }}
+                                                options={options} />
+                                        </div>
 
                                     </div>
 
@@ -208,8 +232,9 @@ const AddPost = () => {
                             </Form>
                         </div>
                     </>
-                )}
-            </Formik>
+                )
+                }
+            </Formik >
 
         </Layout >
     )

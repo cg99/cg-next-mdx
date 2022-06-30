@@ -7,7 +7,7 @@ const postSchema = new mongoose.Schema(
     slug: String,
     content: String,
     featuredImage: String,
-    categories: [ObjectId],
+    category: [ObjectId],
   },
   {
     timestamps: true,
