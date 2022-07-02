@@ -54,6 +54,7 @@ const handler = nc()
         });
       } else {
         // create post
+
         const post = await Post.create(postContent);
         const response = await post.save();
         if (response) {

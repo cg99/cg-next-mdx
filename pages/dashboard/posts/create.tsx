@@ -67,7 +67,7 @@ const AddPost = () => {
             {post.postCreated && <Toast message='Post created successfully.' type='success' />}
 
             <Formik
-                initialValues={{ title: '', slug: '', content: '', category: [], featuredImage: post.uploadedFeaturedImage }}
+                initialValues={{ title: '', slug: '', content: '', categories: [], featuredImage: post.uploadedFeaturedImage }}
                 validate={values => {
                     const errors: any = {};
                     if (!values.title) {
@@ -207,12 +207,12 @@ const AddPost = () => {
                                             <Select
                                                 id="category-select"
                                                 instanceId="category-select"
-                                                name='category'
+                                                name='categories'
                                                 isMulti
                                                 className="basic-multi-select"
                                                 classNamePrefix="select"
                                                 onChange={(v) => {
-                                                    setFieldValue('category', v);
+                                                    setFieldValue('categories', v);
                                                 }}
                                                 options={options} />
                                         </div>

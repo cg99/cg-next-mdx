@@ -19,7 +19,7 @@ const Posts = () => {
         fetchPosts();
     }, []);
 
-    const deletePost = async (id: number) => {
+    const deletePost = async (id: number | string) => {
         await axios.delete(`/api/posts/?id=${id}`);
         setPosts(posts.filter(post => post._id !== id));
     }

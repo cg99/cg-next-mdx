@@ -86,7 +86,7 @@ const EditPost: NextPage = () => {
             {post?.postUpdated && <Toast message='Post updated successfully.' type='success' />}
 
             {!loading && post && <Formik
-                initialValues={{ title: post?.title || '', slug: post?.slug || '', content: post?.content || '', category: post?.category || '', featuredImage: post?.featuredImage || '' }}
+                initialValues={{ title: post?.title || '', slug: post?.slug || '', content: post?.content || '', categories: post?.categories || '', featuredImage: post?.featuredImage || '' }}
                 validate={values => {
                     const errors: any = {};
                     if (!values.title) {
@@ -131,7 +131,7 @@ const EditPost: NextPage = () => {
                         </div>
                         <div className="mt-5 md:mt-0 md:col-span-2">
                             <Form onSubmit={handleSubmit} method="POST">
-                                <div className="shadow sm:rounded-md sm:overflow-hidden">
+                                <div className="shadow sm:rounded-md">
                                     <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
                                         {/* post title */}
                                         <InputField
@@ -190,15 +190,16 @@ const EditPost: NextPage = () => {
                                         /> */}
 
                                         <div className="selected-categories">
-                                            {post?.category?.map(cat => (
-                                                <span>{cat?.label}</span>
+                                            Selected Categories:
+                                            {post?.categories?.map((cat, idx) => (
+                                                <span>{`${idx == 0 ? '' : ', '}${cat.label}`}</span>
                                             ))}
                                         </div>
                                         <div className="block h-full">
                                             <Select
                                                 id="category-select"
                                                 instanceId="category-select"
-                                                name='category'
+                                                name='categories'
                                                 isMulti
                                                 className="basic-multi-select"
                                                 classNamePrefix="select"

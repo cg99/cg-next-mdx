@@ -4,7 +4,7 @@ export interface IPost {
   slug: string;
   content?: string;
   featuredImage?: string;
-  category?: string[];
+  categories?: { label: string; value: string }[];
   createdAt?: Date;
   postUpdated?: boolean;
   postCreated?: boolean;
