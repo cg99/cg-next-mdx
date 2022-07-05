@@ -80,6 +80,28 @@ const EditPost: NextPage = () => {
         return acc;
     }, [])
 
+    const defaultOptions = categories?.filter(category => {
+        const selectedCategories = post?.categories;
+        if (!selectedCategories) return true; // check if post has any category selected
+
+        const len = selectedCategories?.length; // length of the post categories
+        let matched = false;
+        for (let i = 0; i < len; i++) {
+            const item = selectedCategories[i];
+            if (item?.value === category?._id.toString()) {
+                matched = true;
+                break;
+            }
+        }
+        return matched;
+    }).reduce((acc: { value: number | string, label: string }[], cat) => {
+        const obj = {
+            value: cat._id, label: cat.title
+        };
+        acc.push(obj);
+        return acc;
+    }, [])
+
     return (
         <Layout>
 
@@ -190,9 +212,9 @@ const EditPost: NextPage = () => {
                                         /> */}
 
                                         <div className="selected-categories">
-                                            Selected Categories:
+                                            <span>Selected Categories: </span>
                                             {post?.categories?.map((cat, idx) => (
-                                                <span>{`${idx == 0 ? '' : ', '}${cat.label}`}</span>
+                                                <span key={cat?.value}>{`${idx == 0 ? '' : ', '}${cat.label}`}</span>
                                             ))}
                                         </div>
                                         <div className="block h-full">
@@ -206,7 +228,9 @@ const EditPost: NextPage = () => {
                                                 onChange={(v) => {
                                                     setFieldValue('category', v);
                                                 }}
-                                                options={options} />
+                                                options={options}
+                                                defaultValue={defaultOptions}
+                                            />
                                         </div>
 
                                     </div>

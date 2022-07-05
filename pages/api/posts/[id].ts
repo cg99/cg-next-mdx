@@ -38,15 +38,19 @@ const handler = nc()
   })
   .post(async (req: NextApiRequest, res: NextApiResponse) => {
     try {
-      const { id, body } = req.query;
+      const postId = req.query.id;
+      const postContent = req.body;
 
-      console.log(body, id);
-
-      return;
-
-      if (id) {
-        const post = await Post.updateOne({ id, body });
-        return res.status(200).json({ post });
+      console.log("id ");
+      if (postId) {
+        const updatedPost = await Post.updateOne({ _id: postId }, postContent);
+        if (updatedPost.acknowledged) {
+          return res.status(200).json({
+            success: true,
+            message: "Post updated successfully",
+          });
+        }
+        res.status(500).json({ success: false, message: "Failed to update. " });
       }
     } catch (error: any) {
       return res.status(500).json({ message: error.message });

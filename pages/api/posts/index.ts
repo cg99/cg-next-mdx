@@ -27,7 +27,7 @@ const handler = nc()
     const postContent = req.body;
     const postId = req.query.id;
 
-    // console.log(postContent);
+    console.log("index");
     try {
       if (postId) {
         // update post
