@@ -1,3 +1,9 @@
+/*
+For single post api - 
+  - get post
+  - update post
+*/
+
 import type { NextApiRequest, NextApiResponse } from "next";
 import nc from "next-connect";
 import connectDB from "../../../utils/db";
@@ -41,7 +47,7 @@ const handler = nc()
       const postId = req.query.id;
       const postContent = req.body;
 
-      console.log("id ");
+      console.log("id ", postContent);
       if (postId) {
         const updatedPost = await Post.updateOne({ _id: postId }, postContent);
         if (updatedPost.acknowledged) {

@@ -120,7 +120,9 @@ const EditPost: NextPage = () => {
 
                     const bodyContent = { ...values, content: post?.content, featuredImage: post?.featuredImage }
 
-                    await axios.post('/api/posts/?id=' + postId, bodyContent)
+                    console.log(bodyContent);
+
+                    await axios.post('/api/posts/' + postId, bodyContent)
                         .then(res => {
                             if (res.data.success === true) {
                                 setPost({ ...post, postUpdated: true });
@@ -226,7 +228,7 @@ const EditPost: NextPage = () => {
                                                 className="basic-multi-select"
                                                 classNamePrefix="select"
                                                 onChange={(v) => {
-                                                    setFieldValue('category', v);
+                                                    setFieldValue('categories', v);
                                                 }}
                                                 options={options}
                                                 defaultValue={defaultOptions}

@@ -1,3 +1,9 @@
+/*
+For posts api - 
+  - get posts
+  - create post
+*/
+
 import type { NextApiRequest, NextApiResponse } from "next";
 import nc from "next-connect";
 import connectDB from "../../../utils/db";
@@ -27,7 +33,7 @@ const handler = nc()
     const postContent = req.body;
     const postId = req.query.id;
 
-    console.log("index");
+    console.log("index", postContent);
     try {
       if (postId) {
         // update post
@@ -37,11 +43,12 @@ const handler = nc()
             { _id: postId },
             postContent
           );
-          // console.log(updatedPost);
+          console.log(updatedPost);
           if (updatedPost.acknowledged) {
             return res.status(200).json({
               success: true,
               message: "Post updated successfully",
+              updatedPost,
             });
           }
           res
