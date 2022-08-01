@@ -1,7 +1,7 @@
 /*
 For single post api - 
-  - get post
-  - update post
+  - get a post
+  - update a post
 */
 
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -47,19 +47,34 @@ const handler = nc()
       const postId = req.query.id;
       const postContent = req.body;
 
-      console.log("id ", postContent);
+      // console.log("id ", postContent);
       if (postId) {
-        const updatedPost = await Post.updateOne({ _id: postId }, postContent);
-        if (updatedPost.acknowledged) {
+        await Post.findByIdAndUpdate(postId, postContent, (err, docs) => {
+          if (err) {
+            res
+              .status(500)
+              .json({ success: false, message: "Failed to update. " + err });
+          }
           return res.status(200).json({
             success: true,
             message: "Post updated successfully",
+            post: docs,
           });
-        }
-        res.status(500).json({ success: false, message: "Failed to update. " });
+        })
+          .clone()
+          .catch((err) => console.log(err, "outputtin error"));
+        // if (updatedPost.acknowledged) {
+        //   return res.status(200).json({
+        //     success: true,
+        //     message: "Post updated successfully",
+        //   });
+        // }
+        // res.status(500).json({ success: false, message: "Failed to update. " });
       }
     } catch (error: any) {
-      return res.status(500).json({ message: error.message });
+      return res
+        .status(500)
+        .json({ message: "Some error while updating post " + error.message });
     }
   });
 

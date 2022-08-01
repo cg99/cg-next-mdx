@@ -7,7 +7,7 @@ import { MdArrowBack } from 'react-icons/md';
 import Template from '../../components/Template';
 import Post from '../../models/Post';
 const DOMPurify = require('isomorphic-dompurify');
-
+import db from '../../utils/db-page'
 
 const SinglePost = ({ post }) => {
     const parsedPost = JSON.parse(post);
@@ -56,52 +56,52 @@ const SinglePost = ({ post }) => {
 }
 
 export async function getStaticPaths() {
-
+    db();
     // Use new db connection
-    await mongoose
-        .connect(process.env.MONGO_URI!, {
-            // useUnifiedTopology: true,
-            // useFindAndModify: false,
-            // useCreateIndex: true,
-            // useNewUrlParser: true,
-        } as ConnectOptions)
-        .then((res) => {
-            console.log(
-                "Connected to Mongodb"
-            );
-        })
-        .catch((err) => {
-            console.log(
-                `Connection error occured -`,
-                err
-            );
-        });
+    // await mongoose
+    //     .connect(process.env.MONGO_URI!, {
+    //         // useUnifiedTopology: true,
+    //         // useFindAndModify: false,
+    //         // useCreateIndex: true,
+    //         // useNewUrlParser: true,
+    //     } as ConnectOptions)
+    //     .then((res) => {
+    //         console.log(
+    //             "Connected to Mongodb - single post"
+    //         );
+    //     })
+    //     .catch((err) => {
+    //         console.log(
+    //             `Connection error occured - single post -`,
+    //             err
+    //         );
+    //     });
 
-    if (!mongoose.connections[0].readyState) {
-        // Use new db connection
-        await mongoose
-            .connect(process.env.MONGO_URI!, {
-                // useUnifiedTopology: true,
-                // useFindAndModify: false,
-                // useCreateIndex: true,
-                // useNewUrlParser: true,
-            } as ConnectOptions)
-            .then((res) => {
-                console.log(
-                    "Connected to Distribution API Database - Initial Connection"
-                );
-            })
-            .catch((err) => {
-                console.log(
-                    `Initial Distribution API Database connection error occured -`,
-                    err
-                );
-            });
-    }
+    // if (!mongoose.connections[0].readyState) {
+    //     // Use new db connection
+    //     await mongoose
+    //         .connect(process.env.MONGO_URI!, {
+    //             // useUnifiedTopology: true,
+    //             // useFindAndModify: false,
+    //             // useCreateIndex: true,
+    //             // useNewUrlParser: true,
+    //         } as ConnectOptions)
+    //         .then((res) => {
+    //             console.log(
+    //                 "Connected to Distribution API Database - Initial Connection - (from single post)"
+    //             );
+    //         })
+    //         .catch((err) => {
+    //             console.log(
+    //                 `Initial Distribution API Database connection error occured - (from single post) -`,
+    //                 err
+    //             );
+    //         });
+    // }
 
     const posts = await Post.find();
 
-    mongoose.disconnect();
+    // mongoose.disconnect();
 
     const paths = posts ? posts.map(post => ({
         params: {
@@ -120,31 +120,32 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
     if (postId !== null) {
 
-        if (!mongoose.connections[0].readyState) {
-            // Use new db connection
-            await mongoose
-                .connect(process.env.MONGO_URI!, {
-                    // useUnifiedTopology: true,
-                    // useFindAndModify: false,
-                    // useCreateIndex: true,
-                    // useNewUrlParser: true,
-                } as ConnectOptions)
-                .then((res) => {
-                    console.log(
-                        "Connected to Distribution API Database - Initial Connection"
-                    );
-                })
-                .catch((err) => {
-                    console.log(
-                        `Initial Distribution API Database connection error occured -`,
-                        err
-                    );
-                });
-        }
+        // if (!mongoose.connections[0].readyState) {
+        //     // Use new db connection
+        //     await mongoose
+        //         .connect(process.env.MONGO_URI!, {
+        //             // useUnifiedTopology: true,
+        //             // useFindAndModify: false,
+        //             // useCreateIndex: true,
+        //             // useNewUrlParser: true,
+        //         } as ConnectOptions)
+        //         .then((res) => {
+        //             console.log(
+        //                 "Connected to Distribution API Database - Initial Connection"
+        //             );
+        //         })
+        //         .catch((err) => {
+        //             console.log(
+        //                 `Initial Distribution API Database connection error occured -`,
+        //                 err
+        //             );
+        //         });
+        // }
 
+        db();
         const post = await Post.findById(postId);
 
-        mongoose.disconnect();
+        // mongoose.disconnect();
 
         return {
             props: {

@@ -102,10 +102,17 @@ const EditPost: NextPage = () => {
         return acc;
     }, [])
 
+    const [showComponent, setShowComponent] = useState(false);
+    const showToastMessage = <Toast message='Post updated successfully.' type='success' />;
+
+    useEffect(() => {
+        console.log('post updated');
+    }, [post?.postUpdated]);
+
     return (
         <Layout>
 
-            {post?.postUpdated && <Toast message='Post updated successfully.' type='success' />}
+            {post?.postUpdated && showComponent && showToastMessage}
 
             {!loading && post && <Formik
                 initialValues={{ title: post?.title || '', slug: post?.slug || '', content: post?.content || '', categories: post?.categories || '', featuredImage: post?.featuredImage || '' }}
@@ -120,12 +127,13 @@ const EditPost: NextPage = () => {
 
                     const bodyContent = { ...values, content: post?.content, featuredImage: post?.featuredImage }
 
-                    console.log(bodyContent);
+                    // console.log(bodyContent);
 
                     await axios.post('/api/posts/' + postId, bodyContent)
                         .then(res => {
                             if (res.data.success === true) {
-                                setPost({ ...post, postUpdated: true });
+                                const postData = res.data?.post;
+                                setPost({ ...post, ...postData, postUpdated: true });
                             } else {
                                 console.error('error', res.data)
                             }

@@ -1,7 +1,8 @@
 /*
 For posts api - 
   - get posts
-  - create post
+  - create a post
+  - delete a post
 */
 
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -31,44 +32,14 @@ const handler = nc()
   })
   .post(async (req: NextApiRequest, res: NextApiResponse) => {
     const postContent = req.body;
-    const postId = req.query.id;
-
-    console.log("index", postContent);
     try {
-      if (postId) {
-        // update post
-        const find = await Post.findById(postId);
-        if (find) {
-          const updatedPost = await Post.updateOne(
-            { _id: postId },
-            postContent
-          );
-          console.log(updatedPost);
-          if (updatedPost.acknowledged) {
-            return res.status(200).json({
-              success: true,
-              message: "Post updated successfully",
-              updatedPost,
-            });
-          }
-          res
-            .status(500)
-            .json({ success: false, message: "Failed to update. " });
-        }
-        res.status(500).json({
-          success: false,
-          message: "Failed to update. Post not found.",
-        });
-      } else {
-        // create post
-
-        const post = await Post.create(postContent);
-        const response = await post.save();
-        if (response) {
-          res.status(200).json({ success: true, post });
-        }
-        res.status(500).json({ success: false, message: "Failed to append" });
+      const post = await Post.create(postContent);
+      const response = await post.save();
+      if (response) {
+        res.status(200).json({ success: true, post });
       }
+      res.status(500).json({ success: false, message: "Failed to append" });
+      // }
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });
     }
