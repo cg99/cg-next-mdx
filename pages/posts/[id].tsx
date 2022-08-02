@@ -1,3 +1,4 @@
+import axios from 'axios';
 import mongoose, { ConnectOptions } from 'mongoose';
 import { GetStaticProps } from 'next';
 import Image from 'next/image';
@@ -7,7 +8,9 @@ import { MdArrowBack } from 'react-icons/md';
 import Template from '../../components/Template';
 import Post from '../../models/Post';
 const DOMPurify = require('isomorphic-dompurify');
-import db from '../../utils/db-page'
+import db from '../../utils/db-page-not-used'
+
+const SITE_URL = 'http://localhost:3000'
 
 const SinglePost = ({ post }) => {
     const parsedPost = JSON.parse(post);
@@ -56,7 +59,7 @@ const SinglePost = ({ post }) => {
 }
 
 export async function getStaticPaths() {
-    db();
+    // db();
     // Use new db connection
     // await mongoose
     //     .connect(process.env.MONGO_URI!, {
@@ -99,7 +102,11 @@ export async function getStaticPaths() {
     //         });
     // }
 
-    const posts = await Post.find();
+    const posts = await axios.get(SITE_URL + '/api/posts')
+        .then(res => res.data?.posts)
+        .catch(err => console.log(err));
+
+    // const posts = await Post.find();
 
     // mongoose.disconnect();
 
@@ -142,8 +149,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         //         });
         // }
 
-        db();
-        const post = await Post.findById(postId);
+        // db();
+
+        const post = await axios.get(SITE_URL + '/api/posts/' + postId)
+            .then(res => res.data?.post)
+            .catch(err => console.log(err));
+
+        // const post = await Post.findById(postId);
 
         // mongoose.disconnect();
 
