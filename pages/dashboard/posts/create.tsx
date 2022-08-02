@@ -45,13 +45,14 @@ const AddPost = () => {
 
     const [categories, setCategories] = useState<ICategory[] | null>(null);
 
-    useEffect(() => {
+    useEffect(() => { // get catgories
         (async () => {
             const res = await axios.get('/api/categories');
             setCategories(res.data.categories);
         })();
     }, []);
 
+    // category options
     const options = categories?.reduce((acc: { value: number | string, label: string }[], cat) => {
         const obj = {
             value: cat._id, label: cat.title
@@ -60,11 +61,14 @@ const AddPost = () => {
         return acc;
     }, [])
 
+    const [showToastMessage, setShowToastMessage] = useState(false);
+
+    const ToastMessage = <Toast message='Post created successfully.' type='success' update={setShowToastMessage} />;
+
     return (
         <Layout>
 
-
-            {post.postCreated && <Toast message='Post created successfully.' type='success' />}
+            {showToastMessage && ToastMessage}
 
             <Formik
                 initialValues={{ title: '', slug: '', content: '', categories: [], featuredImage: post.uploadedFeaturedImage }}
@@ -77,14 +81,12 @@ const AddPost = () => {
                 }}
                 onSubmit={async (values, { setSubmitting }) => {
                     console.log(values);
-                    // return;
                     const bodyContent = { ...values, featuredImage: post.uploadedFeaturedImage }
                     const data = await axios.post('/api/posts', bodyContent)
                         .then(res => {
                             if (res.data.success === true) {
-                                setPost({
-                                    ...post, postCreated: true
-                                });
+                                setPost({ ...post });
+                                setShowToastMessage(true);
                             } else {
                                 console.error('error', res.data)
                             }

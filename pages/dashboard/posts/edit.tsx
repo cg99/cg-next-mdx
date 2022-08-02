@@ -1,20 +1,18 @@
 import axios from 'axios';
 import { Form, Formik } from 'formik';
-import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import "react-quill/dist/quill.snow.css";
+import Select from 'react-select';
+import slugify from 'slugify';
+import ImageInput from '../../../components/dashboard/form/ImageInput';
+import InputField from '../../../components/dashboard/form/InputField';
 import Layout from '../../../components/dashboard/Layout';
 import Toast from '../../../components/Toast';
-import { IPost } from '../../../utils/interface/IPost';
-import InputField from '../../../components/dashboard/form/InputField';
-import ImageInput from '../../../components/dashboard/form/ImageInput';
-import slugify from 'slugify';
-import { NextPage } from 'next';
-import Select from 'react-select';
 import { ICategory } from '../../../utils/interface/ICategory';
-
+import { IPost } from '../../../utils/interface/IPost';
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
     ssr: false,
@@ -47,7 +45,7 @@ const EditPost: NextPage = () => {
 
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
+    useEffect(() => { // get a post
         if (postId) {
             (async () => {
                 await axios.get(`/api/posts/${postId}`)
@@ -72,47 +70,21 @@ const EditPost: NextPage = () => {
         })();
     }, []);
 
-    const options = categories?.reduce((acc: { value: number | string, label: string }[], cat) => {
-        const obj = {
-            value: cat._id, label: cat.title
-        };
-        acc.push(obj);
-        return acc;
-    }, [])
-
-    const defaultOptions = categories?.filter(category => {
-        const selectedCategories = post?.categories;
-        if (!selectedCategories) return true; // check if post has any category selected
-
-        const len = selectedCategories?.length; // length of the post categories
-        let matched = false;
-        for (let i = 0; i < len; i++) {
-            const item = selectedCategories[i];
-            if (item?.value === category?._id.toString()) {
-                matched = true;
-                break;
-            }
+    const options = categories?.map((c, i) => {
+        return {
+            value: c._id, label: c.title
         }
-        return matched;
-    }).reduce((acc: { value: number | string, label: string }[], cat) => {
-        const obj = {
-            value: cat._id, label: cat.title
-        };
-        acc.push(obj);
-        return acc;
-    }, [])
+    })
 
-    const [showComponent, setShowComponent] = useState(false);
-    const showToastMessage = <Toast message='Post updated successfully.' type='success' />;
+    // if post is updated
+    const [showToastMessage, setShowToastMessage] = useState(false);
 
-    useEffect(() => {
-        console.log('post updated');
-    }, [post?.postUpdated]);
+    const ToastMessage = <Toast message='Post updated successfully.' type='success' update={setShowToastMessage} />;
 
     return (
         <Layout>
 
-            {post?.postUpdated && showComponent && showToastMessage}
+            {showToastMessage && ToastMessage}
 
             {!loading && post && <Formik
                 initialValues={{ title: post?.title || '', slug: post?.slug || '', content: post?.content || '', categories: post?.categories || '', featuredImage: post?.featuredImage || '' }}
@@ -133,7 +105,10 @@ const EditPost: NextPage = () => {
                         .then(res => {
                             if (res.data.success === true) {
                                 const postData = res.data?.post;
-                                setPost({ ...post, ...postData, postUpdated: true });
+                                setPost({ ...post, ...postData });
+                                setShowToastMessage(true);
+
+                                setTimeout(() => setShowToastMessage(false), 1000);
                             } else {
                                 console.error('error', res.data)
                             }
@@ -221,13 +196,9 @@ const EditPost: NextPage = () => {
                                             value={values.category}
                                         /> */}
 
-                                        <div className="selected-categories">
-                                            <span>Selected Categories: </span>
-                                            {post?.categories?.map((cat, idx) => (
-                                                <span key={cat?.value}>{`${idx == 0 ? '' : ', '}${cat.label}`}</span>
-                                            ))}
-                                        </div>
                                         <div className="block h-full">
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Categories</label>
+
                                             <Select
                                                 id="category-select"
                                                 instanceId="category-select"
@@ -239,7 +210,7 @@ const EditPost: NextPage = () => {
                                                     setFieldValue('categories', v);
                                                 }}
                                                 options={options}
-                                                defaultValue={defaultOptions}
+                                                defaultValue={post?.categories}
                                             />
                                         </div>
 
