@@ -1,12 +1,13 @@
 import axios from 'axios';
-import { Field, Form, Formik } from 'formik';
+import { Form, Formik } from 'formik';
 import Link from 'next/link';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import InputField from '../../../components/dashboard/form/InputField';
 import Layout from '../../../components/dashboard/Layout';
-import Toast from '../../../components/Toast';
 import { ICategory } from '../../../utils/interface/ICategory';
+import Select from 'react-select';
+import Toast from '../../../components/Toast';
 
 const EditCategory = () => {
 
@@ -27,7 +28,7 @@ const EditCategory = () => {
             await axios.get('/api/categories?id=' + categoryId)
                 .then(res => {
                     setCategory(res.data?.category);
-                    console.log(res.data?.category);
+                    // console.log(res.data?.category);
                 }).catch(err => console.log(err));
 
             const res = await axios.get('/api/categories');
@@ -37,10 +38,23 @@ const EditCategory = () => {
         })();
     }, [categoryId]);
 
+
+    const options: any = categories?.map((c, i) => {
+        return {
+            value: c._id, label: c.title
+        }
+    })
+
+    // if post is updated
+    const [showToastMessage, setShowToastMessage] = useState(false);
+
+    const ToastMessage = <Toast message='Category updated successfully.' type='success' update={setShowToastMessage} />;
+
+
     return (
         <Layout>
 
-            {/* {category?.categoryUpdated && <Toast message='Category updated successfully.' type='success' />} */}
+            {showToastMessage && ToastMessage}
 
             {!loading && category && <Formik
                 initialValues={{ title: category?.title, parent: category?.parent, slug: category?.slug }}
@@ -59,7 +73,7 @@ const EditCategory = () => {
                         .then(res => {
                             if (res.data.success === true) {
                                 setCategory({
-                                    ...category, categoryUpdated: true
+                                    ...category
                                 });
                             } else {
                                 console.error('error', res.data)
@@ -127,26 +141,22 @@ const EditCategory = () => {
                                         />
 
                                         {categories &&
-                                            <>
-                                                <label htmlFor="parentCategory" className="block text-sm font-medium text-gray-700">Parent</label>
+                                            <div className="block h-full">
+                                                <label className="block text-sm font-medium text-gray-700 mb-1">Parent Category</label>
 
-                                                <Field name="parent" as="select" id="parentCategory" className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-sm py-2 px-3 text-gray-700 leading-tight focus:outline-none">
-                                                    {/* {!category.parent && <option selected> No Parent </option>} */}
-
-                                                    {categories.map((c) => {
-                                                        return (
-                                                            c?._id !== category._id &&
-                                                            <option
-                                                                key={c._id}
-                                                                value={c._id}
-                                                                selected={c?._id.toString() == category.parent}
-                                                            >
-                                                                {c.title}
-                                                            </option>)
-                                                    }
-                                                    )}
-                                                </Field>
-                                            </>
+                                                <Select
+                                                    id="parent-select"
+                                                    instanceId="parent-select"
+                                                    name='parent'
+                                                    className="basic-multi-select"
+                                                    classNamePrefix="select"
+                                                    onChange={(v) => {
+                                                        setFieldValue('parent', v);
+                                                    }}
+                                                    options={options}
+                                                    defaultValue={category?.parent}
+                                                />
+                                            </div>
                                         }
 
 

@@ -3,6 +3,4 @@ export interface ICategory {
   title: string;
   slug: string;
   parent: string;
-  categoryCreated?: boolean;
-  categoryUpdated?: boolean;
 }

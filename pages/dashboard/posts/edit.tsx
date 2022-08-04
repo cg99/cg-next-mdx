@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 import "react-quill/dist/quill.snow.css";
 import Select from 'react-select';
 import slugify from 'slugify';
-import { setEnvironmentData } from 'worker_threads';
 import ImageInput from '../../../components/dashboard/form/ImageInput';
 import InputField from '../../../components/dashboard/form/InputField';
 import Layout from '../../../components/dashboard/Layout';

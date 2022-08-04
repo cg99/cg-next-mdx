@@ -45,7 +45,7 @@ const handler = nc()
         if (category) {
           const updatedCategory = await Category.updateOne(
             { _id: categoryId },
-            categoryContent
+            { ...categoryContent, parent: categoryContent.parent.value }
           );
           // console.log(updatedCategory);
           if (updatedCategory.acknowledged) {

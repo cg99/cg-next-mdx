@@ -13,7 +13,7 @@ const InputField = ({ handleChange, setFieldValue, values, handleBlur, errors, t
                         <Field
                             id={fieldname}
                             className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-sm py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-                            placeholder={`Enter your ${label}`}
+                            placeholder={`Enter ${label}`}
                             type={type}
                             name={fieldname}
                             onChange={handleChange}

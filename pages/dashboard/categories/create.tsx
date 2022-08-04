@@ -20,10 +20,13 @@ const AddCategory = () => {
         })();
     }, []);
 
+    const [showToastMessage, setShowToastMessage] = useState(false);
+
+    const ToastMessage = <Toast message='Category created successfully.' type='success' update={setShowToastMessage} />;
+
     return (
         <Layout>
-
-            {/* {category?.categoryCreated && <Toast message='Category created successfully.' type='success' />} */}
+            {showToastMessage && ToastMessage}
 
             <Formik
                 initialValues={{ title: '', parent: '', slug: '' }}
@@ -42,7 +45,7 @@ const AddCategory = () => {
                             if (res.data.success === true) {
                                 if (category) {
                                     setCategory({
-                                        ...category, categoryCreated: true
+                                        ...category
                                     });
                                 }
                             } else {
@@ -99,7 +102,7 @@ const AddCategory = () => {
 
                                         {/* category slug */}
                                         <InputField
-                                            fieldname='slyg'
+                                            fieldname='slug'
                                             label='Category Slug'
                                             type='text'
                                             value={values.slug}
@@ -119,7 +122,7 @@ const AddCategory = () => {
                                                     as="select"
                                                     id="parentCategory"
                                                     value={values.parent}
-                                                    handleChange={handleChange}
+                                                    onChange={handleChange}
                                                     className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-sm py-2 px-3 text-gray-700 leading-tight focus:outline-none">
                                                     {categories.map((category) => (
                                                         <option key={category._id} value={category._id}>
