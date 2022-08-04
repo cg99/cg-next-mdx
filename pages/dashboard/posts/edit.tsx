@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import "react-quill/dist/quill.snow.css";
 import Select from 'react-select';
 import slugify from 'slugify';
+import { setEnvironmentData } from 'worker_threads';
 import ImageInput from '../../../components/dashboard/form/ImageInput';
 import InputField from '../../../components/dashboard/form/InputField';
 import Layout from '../../../components/dashboard/Layout';
@@ -23,6 +24,7 @@ const QuillNoSSRWrapper = dynamic(import('react-quill'), {
 const EditPost: NextPage = () => {
     const [post, setPost] = useState<IPost | null>(null);
 
+    // for quill editor
     const modules = {
         toolbar: [
             [{ 'header': [1, 2, false] }],
@@ -63,18 +65,21 @@ const EditPost: NextPage = () => {
 
     const [categories, setCategories] = useState<ICategory[] | null>(null);
 
-    useEffect(() => {
+    useEffect(() => { // get caategories
         (async () => {
             const res = await axios.get('/api/categories');
             setCategories(res.data.categories);
         })();
     }, []);
 
+
     const options = categories?.map((c, i) => {
         return {
             value: c._id, label: c.title
         }
     })
+
+
 
     // if post is updated
     const [showToastMessage, setShowToastMessage] = useState(false);

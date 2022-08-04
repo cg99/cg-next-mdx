@@ -23,10 +23,10 @@ const AddCategory = () => {
     return (
         <Layout>
 
-            {category?.categoryCreated && <Toast message='Category created successfully.' type='success' />}
+            {/* {category?.categoryCreated && <Toast message='Category created successfully.' type='success' />} */}
 
             <Formik
-                initialValues={{ title: '', parent: '' }}
+                initialValues={{ title: '', parent: '', slug: '' }}
                 validate={values => {
                     const errors: any = {};
                     if (!values.title) {
@@ -95,6 +95,22 @@ const AddCategory = () => {
                                             touched={touched}
                                             setFieldValue={setFieldValue}
                                         />
+
+
+                                        {/* category slug */}
+                                        <InputField
+                                            fieldname='slyg'
+                                            label='Category Slug'
+                                            type='text'
+                                            value={values.slug}
+                                            handleChange={handleChange}
+                                            handleBlur={handleBlur}
+                                            values={values}
+                                            errors={errors}
+                                            touched={touched}
+                                            setFieldValue={setFieldValue}
+                                        />
+
                                         {categories &&
                                             <>
                                                 <label htmlFor="parentCategory" className="block text-sm font-medium text-gray-700">Parent</label>

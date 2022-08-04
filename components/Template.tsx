@@ -7,7 +7,7 @@ import Navbar from '../components/Navbar'
 
 export default function Template({ children }) {
     return (
-        <div>
+        <>
             <Head>
                 <title>Codegenes</title>
                 <meta name="description" content="unique projects with source code" />
@@ -22,6 +22,6 @@ export default function Template({ children }) {
             </main >
 
             <Footer />
-        </div>
+        </>
     )
 }

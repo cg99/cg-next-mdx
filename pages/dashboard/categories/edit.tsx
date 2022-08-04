@@ -40,10 +40,10 @@ const EditCategory = () => {
     return (
         <Layout>
 
-            {category?.categoryUpdated && <Toast message='Category updated successfully.' type='success' />}
+            {/* {category?.categoryUpdated && <Toast message='Category updated successfully.' type='success' />} */}
 
             {!loading && category && <Formik
-                initialValues={{ title: category?.title, parent: category?.parent }}
+                initialValues={{ title: category?.title, parent: category?.parent, slug: category?.slug }}
                 validate={values => {
                     const errors: any = {};
                     if (!values.title) {
@@ -112,12 +112,26 @@ const EditCategory = () => {
                                             setFieldValue={setFieldValue}
                                         />
 
+                                        {/* category slug */}
+                                        <InputField
+                                            fieldname='slug'
+                                            label='Category Slug'
+                                            type='text'
+                                            value={values.slug}
+                                            handleChange={handleChange}
+                                            handleBlur={handleBlur}
+                                            values={values}
+                                            errors={errors}
+                                            touched={touched}
+                                            setFieldValue={setFieldValue}
+                                        />
+
                                         {categories &&
                                             <>
                                                 <label htmlFor="parentCategory" className="block text-sm font-medium text-gray-700">Parent</label>
 
                                                 <Field name="parent" as="select" id="parentCategory" className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-sm py-2 px-3 text-gray-700 leading-tight focus:outline-none">
-                                                    {!category.parent && <option selected> No Parent </option>}
+                                                    {/* {!category.parent && <option selected> No Parent </option>} */}
 
                                                     {categories.map((c) => {
                                                         return (

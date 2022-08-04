@@ -81,6 +81,9 @@ const AddPost = () => {
                 }}
                 onSubmit={async (values, { setSubmitting }) => {
                     console.log(values);
+
+                    // return;
+
                     const bodyContent = { ...values, featuredImage: post.uploadedFeaturedImage }
                     const data = await axios.post('/api/posts', bodyContent)
                         .then(res => {

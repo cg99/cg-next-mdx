@@ -6,7 +6,7 @@ const postSchema = new mongoose.Schema(
     slug: String,
     content: String,
     featuredImage: String,
-    categories: [{ title: String, id: String }],
+    categories: [{ label: String, value: String }],
   },
   {
     timestamps: true,
