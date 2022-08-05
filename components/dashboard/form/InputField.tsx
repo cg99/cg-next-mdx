@@ -1,7 +1,7 @@
 import { Field } from 'formik';
 import React from 'react'
 
-const InputField = ({ handleChange, setFieldValue, values, handleBlur, errors, touched, fieldname, label, type, value }) => {
+const InputField = ({ handleChange, handleBlur, errors, touched, fieldname, label, type, value }) => {
     return (
         <>
             <div className="grid grid-cols-3 gap-6">

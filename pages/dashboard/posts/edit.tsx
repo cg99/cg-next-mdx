@@ -155,10 +155,10 @@ const EditPost: NextPage = () => {
                                                 const slug = slugify(values.title, { lower: true });
                                                 setFieldValue('slug', slug);
                                             }}
-                                            values={values}
+                                            // values={values}
                                             errors={errors}
                                             touched={touched}
-                                            setFieldValue={setFieldValue}
+                                        // setFieldValue={setFieldValue}
                                         />
 
                                         {/* post slug */}
@@ -168,10 +168,10 @@ const EditPost: NextPage = () => {
                                             type='text'
                                             handleChange={handleChange}
                                             handleBlur={handleBlur}
-                                            values={values}
+                                            // values={values}
                                             errors={errors}
                                             touched={touched}
-                                            setFieldValue={setFieldValue}
+                                            // setFieldValue={setFieldValue}
                                             value={values.slug}
                                         />}
 

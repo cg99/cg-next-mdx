@@ -53,13 +53,11 @@ const AddPost = () => {
     }, []);
 
     // category options
-    const options = categories?.reduce((acc: { value: number | string, label: string }[], cat) => {
-        const obj = {
-            value: cat._id, label: cat.title
-        };
-        acc.push(obj);
-        return acc;
-    }, [])
+    const options = categories?.map((c, i) => {
+        return {
+            value: c._id, label: c.title
+        }
+    })
 
     const [showToastMessage, setShowToastMessage] = useState(false);
 
@@ -136,10 +134,10 @@ const AddPost = () => {
                                                 const slug = slugify(values.title, { lower: true });
                                                 setFieldValue('slug', slug);
                                             }}
-                                            values={values}
+                                            // values={values}
                                             errors={errors}
                                             touched={touched}
-                                            setFieldValue={setFieldValue}
+                                        // setFieldValue={setFieldValue}
                                         />
 
                                         {/* post slug */}
@@ -147,13 +145,13 @@ const AddPost = () => {
                                             fieldname='slug'
                                             label='URL'
                                             type='text'
+                                            value={values.slug}
                                             handleChange={handleChange}
                                             handleBlur={handleBlur}
-                                            values={values}
+                                            // values={values}
                                             errors={errors}
                                             touched={touched}
-                                            setFieldValue={setFieldValue}
-                                            value={values.slug}
+                                        // setFieldValue={setFieldValue}
                                         />
 
                                         <QuillNoSSRWrapper

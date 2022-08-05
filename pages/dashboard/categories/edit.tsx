@@ -45,6 +45,11 @@ const EditCategory = () => {
         }
     })
 
+    const parent = categories?.find(cat => cat?._id === category?.parent)
+    const defaultParent = {
+        value: parent?._id, label: parent?.title
+    }
+
     // if post is updated
     const [showToastMessage, setShowToastMessage] = useState(false);
 
@@ -75,6 +80,9 @@ const EditCategory = () => {
                                 setCategory({
                                     ...category
                                 });
+                                setShowToastMessage(true);
+
+                                setTimeout(() => setShowToastMessage(false), 1000);
                             } else {
                                 console.error('error', res.data)
                             }
@@ -120,24 +128,20 @@ const EditCategory = () => {
                                             value={values.title}
                                             handleChange={handleChange}
                                             handleBlur={handleBlur}
-                                            values={values}
                                             errors={errors}
                                             touched={touched}
-                                            setFieldValue={setFieldValue}
                                         />
 
                                         {/* category slug */}
                                         <InputField
                                             fieldname='slug'
-                                            label='Category Slug'
+                                            label='URL'
                                             type='text'
-                                            value={values.slug}
                                             handleChange={handleChange}
                                             handleBlur={handleBlur}
-                                            values={values}
                                             errors={errors}
                                             touched={touched}
-                                            setFieldValue={setFieldValue}
+                                            value={values.slug}
                                         />
 
                                         {categories &&
@@ -154,7 +158,7 @@ const EditCategory = () => {
                                                         setFieldValue('parent', v);
                                                     }}
                                                     options={options}
-                                                    defaultValue={category?.parent}
+                                                    defaultValue={defaultParent}
                                                 />
                                             </div>
                                         }

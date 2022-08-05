@@ -93,10 +93,10 @@ const AddCategory = () => {
                                             value={values.title}
                                             handleChange={handleChange}
                                             handleBlur={handleBlur}
-                                            values={values}
+                                            // values={values}
                                             errors={errors}
                                             touched={touched}
-                                            setFieldValue={setFieldValue}
+                                        // setFieldValue={setFieldValue}
                                         />
 
 
@@ -108,10 +108,10 @@ const AddCategory = () => {
                                             value={values.slug}
                                             handleChange={handleChange}
                                             handleBlur={handleBlur}
-                                            values={values}
+                                            // values={values}
                                             errors={errors}
                                             touched={touched}
-                                            setFieldValue={setFieldValue}
+                                        // setFieldValue={setFieldValue}
                                         />
 
                                         {categories &&
