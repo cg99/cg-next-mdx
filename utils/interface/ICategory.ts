@@ -1,5 +1,5 @@
 export interface ICategory {
-  _id: string;
+  _id: string | number;
   title: string;
   slug: string;
   parent: string;

@@ -1,5 +1,4 @@
 import { Field } from 'formik';
-import React from 'react'
 
 const InputField = ({ handleChange, handleBlur, errors, touched, fieldname, label, type, value }) => {
     return (

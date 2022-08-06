@@ -44,7 +44,7 @@ const index = () => {
                                         {category.title}
                                     </a>
                                 </Link>
-                                <button className='text-red-500' onClick={() => deleteCategory(category._id)}>
+                                <button className='text-red-500' onClick={() => deleteCategory(Number(category._id))}>
                                     <RiDeleteBin2Line />
                                 </button>
                             </div>

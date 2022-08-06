@@ -72,7 +72,7 @@ const EditPost: NextPage = () => {
     }, []);
 
 
-    const options = categories?.map((c, i) => {
+    const options: any = categories?.map((c, i) => {
         return {
             value: c._id, label: c.title
         }

@@ -20,6 +20,10 @@ const EditCategory = () => {
 
     const [loading, setLoading] = useState(true);
 
+    // if post is updated
+    const [showToastMessage, setShowToastMessage] = useState(false);
+
+    const ToastMessage = <Toast message='Category updated successfully.' type='success' update={setShowToastMessage} />;
 
     useEffect(() => {
         if (!categoryId) return;
@@ -36,7 +40,7 @@ const EditCategory = () => {
 
             setLoading(false);
         })();
-    }, [categoryId]);
+    }, [categoryId, showToastMessage]);
 
 
     const options: any = categories?.map((c, i) => {
@@ -45,15 +49,12 @@ const EditCategory = () => {
         }
     })
 
-    const parent = categories?.find(cat => cat?._id === category?.parent)
-    const defaultParent = {
-        value: parent?._id, label: parent?.title
+    // parent category
+    // const parent = categories?.find(cat => cat?._id === category?.parent)?.title;
+    const defaultParent: any = categories?.find(cat => cat?._id === category?.parent);
+    const defaultValue = {
+        value: defaultParent?._id, label: defaultParent?.title
     }
-
-    // if post is updated
-    const [showToastMessage, setShowToastMessage] = useState(false);
-
-    const ToastMessage = <Toast message='Category updated successfully.' type='success' update={setShowToastMessage} />;
 
 
     return (
@@ -78,7 +79,7 @@ const EditCategory = () => {
                         .then(res => {
                             if (res.data.success === true) {
                                 setCategory({
-                                    ...category
+                                    ...res.data?.category
                                 });
                                 setShowToastMessage(true);
 
@@ -117,7 +118,7 @@ const EditCategory = () => {
 
                         <div className="mt-5 md:mt-0 md:col-span-2">
                             <Form onSubmit={handleSubmit} method="POST">
-                                <div className="shadow sm:rounded-md sm:overflow-hidden">
+                                <div className="shadow sm:rounded-md">
                                     <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
 
                                         {/* category title */}
@@ -149,16 +150,17 @@ const EditCategory = () => {
                                                 <label className="block text-sm font-medium text-gray-700 mb-1">Parent Category</label>
 
                                                 <Select
-                                                    id="parent-select"
-                                                    instanceId="parent-select"
+                                                    id="pare n t-select"
+                                                    instanceId="pare n t-select"
                                                     name='parent'
+                                                    // isMulti
                                                     className="basic-multi-select"
-                                                    classNamePrefix="select"
-                                                    onChange={(v) => {
-                                                        setFieldValue('parent', v);
+                                                    classNamePrefix="parent-select"
+                                                    onChange={(v: any) => {
+                                                        setFieldValue('parent', v?.value);
                                                     }}
                                                     options={options}
-                                                    defaultValue={defaultParent}
+                                                    defaultValue={defaultValue}
                                                 />
                                             </div>
                                         }

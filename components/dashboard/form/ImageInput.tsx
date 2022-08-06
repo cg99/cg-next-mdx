@@ -1,6 +1,6 @@
-import React, { useRef } from 'react'
-import Image from 'next/image';
 import axios from 'axios';
+import Image from 'next/image';
+import { useRef } from 'react';
 
 const ImageInput = ({ post, setPost, handleBlur }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);

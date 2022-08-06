@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Field, Form, Formik } from 'formik';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
+import Select from 'react-select';
 import InputField from '../../../components/dashboard/form/InputField';
 import Layout from '../../../components/dashboard/Layout';
 import Toast from '../../../components/Toast';
@@ -23,6 +24,20 @@ const AddCategory = () => {
     const [showToastMessage, setShowToastMessage] = useState(false);
 
     const ToastMessage = <Toast message='Category created successfully.' type='success' update={setShowToastMessage} />;
+
+    const options: any = categories?.map((c, i) => {
+        return {
+            value: c._id, label: c.title
+        }
+    })
+
+    // parent category
+    // const parent = categories?.find(cat => cat?._id === category?.parent)?.title;
+    const defaultParent: any = categories?.find(cat => cat?._id === category?.parent);
+    const defaultValue: any = {
+        value: defaultParent?._id, label: defaultParent?.title
+    }
+
 
     return (
         <Layout>
@@ -82,7 +97,7 @@ const AddCategory = () => {
                         </div>
                         <div className="mt-5 md:mt-0 md:col-span-2">
                             <Form onSubmit={handleSubmit} method="POST">
-                                <div className="shadow sm:rounded-md sm:overflow-hidden">
+                                <div className="shadow sm:rounded-md">
                                     <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
 
                                         {/* category title */}
@@ -117,19 +132,19 @@ const AddCategory = () => {
                                         {categories &&
                                             <>
                                                 <label htmlFor="parentCategory" className="block text-sm font-medium text-gray-700">Parent</label>
-                                                <Field
-                                                    name="parent"
-                                                    as="select"
-                                                    id="parentCategory"
-                                                    value={values.parent}
-                                                    onChange={handleChange}
-                                                    className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-sm py-2 px-3 text-gray-700 leading-tight focus:outline-none">
-                                                    {categories.map((category) => (
-                                                        <option key={category._id} value={category._id}>
-                                                            {category.title}
-                                                        </option>)
-                                                    )}
-                                                </Field>
+                                                <Select
+                                                    id="pare n t-select"
+                                                    instanceId="pare n t-select"
+                                                    name='parent'
+                                                    // isMulti
+                                                    className="basic-multi-select"
+                                                    classNamePrefix="parent-select"
+                                                    onChange={(v: any) => {
+                                                        setFieldValue('parent', v?.value);
+                                                    }}
+                                                    options={options}
+                                                    defaultValue={defaultValue}
+                                                />
                                             </>
                                         }
 
@@ -149,8 +164,9 @@ const AddCategory = () => {
                             </Form>
                         </div>
                     </>
-                )}
-            </Formik>
+                )
+                }
+            </Formik >
 
         </Layout >
     )
