@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Field, Form, Formik } from 'formik';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
+import { AiOutlineClose } from 'react-icons/ai';
 import Select from 'react-select';
 import InputField from '../../../components/dashboard/form/InputField';
 import Layout from '../../../components/dashboard/Layout';
@@ -130,22 +131,30 @@ const AddCategory = () => {
                                         />
 
                                         {categories &&
-                                            <>
+                                            <div>
                                                 <label htmlFor="parentCategory" className="block text-sm font-medium text-gray-700">Parent</label>
-                                                <Select
-                                                    id="pare n t-select"
-                                                    instanceId="pare n t-select"
-                                                    name='parent'
-                                                    // isMulti
-                                                    className="basic-multi-select"
-                                                    classNamePrefix="parent-select"
-                                                    onChange={(v: any) => {
-                                                        setFieldValue('parent', v?.value);
-                                                    }}
-                                                    options={options}
-                                                    defaultValue={defaultValue}
-                                                />
-                                            </>
+                                                <div className="mt-1 grid grid-cols-2 gap-2">
+                                                    <Select
+                                                        id="pare n t-select"
+                                                        instanceId="pare n t-select"
+                                                        name='parent'
+                                                        // isMulti
+                                                        className="basic-multi-select"
+                                                        classNamePrefix="parent-select"
+                                                        onChange={(v: any) => {
+                                                            setFieldValue('parent', v?.value);
+                                                        }}
+                                                        options={options}
+                                                    // defaultValue={defaultValue}
+                                                    />
+                                                    {values.parent &&
+                                                        <button type="button"
+                                                            onClick={() => setFieldValue('parent', undefined)}
+                                                            className="w-10 px-2 py-2 border-2 border-red-600 text-red-600  justify-center font-medium text-lg leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"><AiOutlineClose className='mx-auto' /></button>
+                                                    }
+
+                                                </div>
+                                            </div>
                                         }
 
 
