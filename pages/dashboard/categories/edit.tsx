@@ -5,16 +5,15 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import InputField from '../../../components/dashboard/form/InputField';
 import Layout from '../../../components/dashboard/Layout';
-import { ICategory } from '../../../utils/interface/ICategory';
+// import { ICategory } from '../../../utils/interface/ICategory';
 import Select from 'react-select';
 import Toast from '../../../components/Toast';
-import { AiOutlineClose } from 'react-icons/ai';
 
 const EditCategory = () => {
 
-    const [category, setCategory] = useState<ICategory | null>(null);
+    const [categories, setCategories] = useState<any>(null);
+    const [category, setCategory] = useState<any>(null);
 
-    const [categories, setCategories] = useState<ICategory[] | null>(null);
 
     const router = useRouter();
     const categoryId = router.query?.id;
@@ -26,45 +25,24 @@ const EditCategory = () => {
 
     const ToastMessage = <Toast message='Category updated successfully.' type='success' update={setShowToastMessage} />;
 
-    useEffect(() => {
-        if (!categoryId) return;
-
+    useEffect(() => { // get categories
         (async () => {
-            await axios.get('/api/categories?id=' + categoryId)
-                .then(res => {
-                    setCategory(res.data?.category);
-                    // console.log(res.data?.category);
-                }).catch(err => console.log(err));
-
             const res = await axios.get('/api/categories');
-            setCategories(res.data.categories);
+            const cats = res.data.categories?.map((c, i) => {
+                return {
+                    value: c._id, label: c.title, title: c.title, slug: c.slug, parent: c.parent
+                }
+            })
+            setCategories(cats);
 
             setLoading(false);
         })();
     }, [categoryId, showToastMessage]);
 
-    const [options, setOptions] = useState();
-    const [defaultParent, setDefaultParent] = useState<any>();
-
-    useEffect(() => {
-        // parent categories optoiins
-        const opt: any = categories?.map((c, i) => {
-            return {
-                value: c._id, label: c.title
-            }
-        })
-        setOptions(opt);
-
-        // parent category default value
-        const parent: any = categories?.find(cat => cat?._id === category?.parent);
-        const defaultValue = {
-            value: parent?._id, label: parent?.title
-        }
-
-        setDefaultParent(defaultValue);
-    }, [categories]);
-
-
+    useEffect(() => { // set single category
+        const cat = categories?.find(c => c?.value === categoryId);
+        setCategory(cat);
+    }, [categories])
 
     return (
         <Layout>
@@ -78,9 +56,13 @@ const EditCategory = () => {
                     if (!values.title) {
                         errors.title = 'Required';
                     }
+                    if (!values.slug) {
+                        errors.slug = 'Required';
+                    }
                     return errors;
                 }}
                 onSubmit={async (values, { setSubmitting }) => {
+                    if (!values.parent) values = { ...values, parent: null }
 
                     const bodyContent = { ...values };
 
@@ -154,36 +136,27 @@ const EditCategory = () => {
                                             value={values.slug}
                                         />
 
-                                        {categories &&
-                                            <div className="block h-full">
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">Parent Category</label>
-                                                <div className="mt-1 grid grid-cols-2 gap-2">
+                                        <div className="block h-full">
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Parent Category</label>
+                                            <div className="mt-1 grid grid-cols-2 gap-2">
 
-                                                    <Select
-                                                        id="pare n t-select"
-                                                        instanceId="pare n t-select"
-                                                        name='parent'
-                                                        // isMulti
-                                                        className="basic-multi-select"
-                                                        classNamePrefix="parent-select"
-                                                        onChange={(v: any) => {
-                                                            setFieldValue('parent', v?.value);
-                                                        }}
-                                                        options={options}
-                                                    // defaultValue={defaultParent}
-                                                    />
-                                                    {values?.parent &&
-                                                        <button type="button"
-                                                            onClick={() => {
-                                                                setFieldValue('parent', null)
-                                                                setDefaultParent(null);
-                                                            }}
-                                                            className="w-10 px-2 py-2 border-2 border-red-600 text-red-600  justify-center font-medium text-lg leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"><AiOutlineClose className='mx-auto' /></button>
-                                                    }
-                                                </div>
+                                                <Select
+                                                    key={category?.parent}
+                                                    id="parent-select"
+                                                    instanceId="parent-select"
+                                                    name='parent'
+                                                    isClearable
+                                                    className="basic-multi-select"
+                                                    classNamePrefix="parent-select"
+                                                    onChange={(v: any) => {
+                                                        setFieldValue('parent', v?.value);
+                                                    }}
+                                                    options={categories}
+                                                    defaultValue={categories?.find(c => c?.value === category?.parent)}
+                                                />
+
                                             </div>
-                                        }
-
+                                        </div>
 
                                     </div>
 

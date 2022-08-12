@@ -11,7 +11,6 @@ import nc from "next-connect";
 import connectDB from "../../../utils/db";
 // import Post from "../../../models/Post";
 import Category from "../../../models/Category";
-import { log } from "../../../utils/debug/log";
 
 export const config = {
   api: {
@@ -46,16 +45,9 @@ const handler = nc()
     let categoryContent = req.body;
     const categoryId = req.query.id;
 
-    console.log(categoryContent);
     try {
       if (categoryId) {
         // Update Category
-        console.log(categoryContent);
-        // const updatedCategory = await Category.findOneAndUpdate(
-        //   { _id: categoryId },
-        //   categoryContent,
-        //   { new: true, overwrite: true }
-        // );
         await Category.findByIdAndUpdate(
           categoryId,
           categoryContent,

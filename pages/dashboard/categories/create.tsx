@@ -51,6 +51,9 @@ const AddCategory = () => {
                     if (!values.title) {
                         errors.title = 'Required';
                     }
+                    if (!values.slug) {
+                        errors.slug = 'Required';
+                    }
                     return errors;
                 }}
                 onSubmit={async (values, { setSubmitting }) => {
@@ -135,10 +138,11 @@ const AddCategory = () => {
                                                 <label htmlFor="parentCategory" className="block text-sm font-medium text-gray-700">Parent</label>
                                                 <div className="mt-1 grid grid-cols-2 gap-2">
                                                     <Select
-                                                        id="pare n t-select"
-                                                        instanceId="pare n t-select"
+                                                        id="parent-select"
+                                                        instanceId="parent-select"
                                                         name='parent'
                                                         // isMulti
+                                                        isClearable
                                                         className="basic-multi-select"
                                                         classNamePrefix="parent-select"
                                                         onChange={(v: any) => {
@@ -147,11 +151,11 @@ const AddCategory = () => {
                                                         options={options}
                                                     // defaultValue={defaultValue}
                                                     />
-                                                    {values.parent &&
+                                                    {/* {values.parent &&
                                                         <button type="button"
                                                             onClick={() => setFieldValue('parent', undefined)}
                                                             className="w-10 px-2 py-2 border-2 border-red-600 text-red-600  justify-center font-medium text-lg leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"><AiOutlineClose className='mx-auto' /></button>
-                                                    }
+                                                    } */}
 
                                                 </div>
                                             </div>
