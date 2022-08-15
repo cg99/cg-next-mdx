@@ -25,10 +25,10 @@ const SinglePost = ({ post }) => {
 
             <Suspense fallback={<div>Loading</div>}>
                 <div className='p-6 m-2 mt-4 shadow-sm relative'>
-                    <div className='w-full h-48 relative'>
+                    <div className='w-full h-64 relative'>
                         <Image src={parsedPost?.featuredImage ? ("/uploads/" + parsedPost?.featuredImage) : '/images/placeholder.webp'}
                             layout='fill'
-                            objectFit='cover'
+                            objectFit='contain'
                             alt={parsedPost?.title}
                             priority
                         />

@@ -26,9 +26,10 @@ import { SortableItem } from '../../components/dashboard/draggable/SortableItem'
 import { Item } from '../../components/dashboard/draggable/Item';
 
 import { Draggable } from '../../components/dashboard/draggable/Draggable';
+import DraggableList from 'react-draggable-lists'
 
 const Menu: NextPage = () => {
-    const [categories, setCategories] = useState<any>([]);
+    const [categories, setCategories] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -46,7 +47,6 @@ const Menu: NextPage = () => {
     }
 
     const [activeId, setActiveId] = useState(null);
-    const [items, setItems] = useState(['1', '2', '3']);
     const sensors = useSensors(
         useSensor(PointerSensor),
         useSensor(KeyboardSensor, {
@@ -58,7 +58,7 @@ const Menu: NextPage = () => {
         <Layout>
             <h1>Menu</h1>
             <div>
-                <DndContext
+                {/* <DndContext
                     sensors={sensors}
                     collisionDetection={closestCenter}
                     onDragStart={handleDragStart}
@@ -69,13 +69,24 @@ const Menu: NextPage = () => {
                         strategy={verticalListSortingStrategy}
                     >
                         {categories?.map((category, id) => (
-                            <SortableItem key={id} id={id} />
+                            <SortableItem key={id} id={id} category={category} />
                         ))}
                     </SortableContext>
                     <DragOverlay>
                         {activeId ? <Item id={activeId} /> : null}
                     </DragOverlay>
-                </DndContext>
+                </DndContext> */}
+
+                <div style={{ width: 300, margin: '0 auto' }}>
+                    {categories && !loading && <DraggableList width={300} height={50} rowSize={1}>
+                        {categories?.map((category, id) => (
+                            <div key={category?._id} style={{ width: 300, height: 50, background: 'green' }}>
+                                {category?.title}
+                            </div>
+                        ))}
+                    </DraggableList>
+                    }
+                </div>
             </div>
         </Layout >
     )
@@ -90,11 +101,11 @@ const Menu: NextPage = () => {
         const { active, over } = event;
 
         if (active.id !== over.id) {
-            setItems((items) => {
-                const oldIndex = items.indexOf(active.id);
-                const newIndex = items.indexOf(over.id);
+            setCategories((categories) => {
+                const oldIndex = categories.indexOf(active.id);
+                const newIndex = categories.indexOf(over.id);
 
-                return arrayMove(items, oldIndex, newIndex);
+                return arrayMove(categories, oldIndex, newIndex);
             });
         }
 

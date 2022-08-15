@@ -19,8 +19,6 @@ export function SortableItem(props) {
     };
 
     return (
-        <Item ref={setNodeRef} style={style} {...attributes} {...listeners}>
-            {props.id}
-        </Item>
+        <Item ref={setNodeRef} style={style} {...attributes} {...listeners} category={props.category} />
     );
 }

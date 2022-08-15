@@ -54,6 +54,7 @@ const EditPost: NextPage = () => {
                         const postData = res.data?.post;
                         setPost({ ...post, ...postData });
                         setLoading(false);
+                        console.log(post)
                     }).catch(err => {
                         console.log(err);
                     });

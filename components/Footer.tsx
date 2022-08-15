@@ -5,7 +5,7 @@ import Image from 'next/image';
 const Footer = () => {
     return (
         <footer className={styles.footer}>
-            <div>Footer</div>
+            <div>codegenes &#169; 2022</div>
         </footer>
     )
 }

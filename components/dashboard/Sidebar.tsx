@@ -51,13 +51,13 @@ const Sidebar = () => {
                         </a>
                     </Link>
                 </div>
-                <div className='my-2'>
+                {/* <div className='my-2'>
                     <Link href="/dashboard/menu">
                         <a className='flex items-center'>
                             <MdOutlineAccountCircle /> <span className='pl-2 pb-0.5'>Menu</span>
                         </a>
                     </Link>
-                </div>
+                </div> */}
             </div>
         </div>
     )

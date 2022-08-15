@@ -16,7 +16,7 @@ const Navbar = () => {
     return (
         <div className='bg-blue-800 px-16'>
             <ul className='flex text-slate-50'>
-                {categories?.map(category => (
+                {categories?.slice(0, 8).map(category => (
                     <li className='px-4 py-4 hover:bg-blue-900' key={category?._id}>
                         <Link href={`/category/${category?.slug}`}>
                             <a>{category?.title}</a>
