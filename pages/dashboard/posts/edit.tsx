@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Form, Formik } from 'formik';
 import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import "react-quill/dist/quill.snow.css";
@@ -54,7 +55,7 @@ const EditPost: NextPage = () => {
                         const postData = res.data?.post;
                         setPost({ ...post, ...postData });
                         setLoading(false);
-                        console.log(post)
+                        // console.log(post)
                     }).catch(err => {
                         console.log(err);
                     });
@@ -136,9 +137,13 @@ const EditPost: NextPage = () => {
                 }) => (
 
                     <>
-                        <div className="md:col-span-1">
-                            <div className="px-4 sm:px-0">
+                        <div className="md:col-span-1 mb-4">
+                            <div className="columns-2 justify-between flex px-4 sm:px-0">
                                 <h3 className="text-lg font-medium leading-6 text-gray-900">Edit Post</h3>
+
+                                <Link href="/dashboard/posts/create">
+                                    <a className='inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500'>New Post</a>
+                                </Link>
                             </div>
                         </div>
                         <div className="mt-5 md:mt-0 md:col-span-2">

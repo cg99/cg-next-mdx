@@ -28,17 +28,17 @@ const handler = nc()
     try {
       if (categoryId) {
         const category = await Category.findById(categoryId);
-        res
+        return res
           .status(200)
           .json({ success: true, message: "Get Post Successful", category });
       }
 
       const categories = await Category.find();
-      res
+      return res
         .status(200)
         .json({ success: true, message: "Get Posts Successful", categories });
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      return res.status(500).json({ success: false, message: error.message });
     }
   })
   .post(async (req: NextApiRequest, res: NextApiResponse) => {
@@ -71,23 +71,27 @@ const handler = nc()
         const category = await Category.create(categoryContent);
         const response = await category.save();
         if (response) {
-          res.status(200).json({ success: true, category });
+          return res.status(200).json({ success: true, category });
         }
-        res.status(500).json({ success: false, message: "Failed to append" });
+        return res
+          .status(500)
+          .json({ success: false, message: "Failed to append" });
       }
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      return res.status(500).json({ success: false, message: error.message });
     }
   })
   .delete(async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const response = await Category.deleteOne({ _id: req.query.id });
       if (response.deletedCount === 1) {
-        res.status(200).json({ success: true });
+        return res.status(200).json({ success: true });
       }
-      res.status(500).json({ success: false, message: "Failed to delete" });
+      return res
+        .status(500)
+        .json({ success: false, message: "Failed to delete" });
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      return res.status(500).json({ success: false, message: error.message });
     }
   });
 

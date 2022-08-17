@@ -21,11 +21,24 @@ export const config = {
 const handler = nc()
   // .use(withAuth)
   .get(async (req: NextApiRequest, res: NextApiResponse) => {
+    const { page = 1, limit = 5 } = req.query;
+    const options = {
+      page,
+      limit,
+    };
     try {
-      const posts = await Post.find().sort({ createdAt: -1 });
-      return res
-        .status(200)
-        .json({ success: true, message: "Get Posts Successful", posts });
+      await Post.paginate({}, options, function (err, result) {
+        if (err) {
+          return res.status(500).json({ success: false, message: err });
+        }
+
+        // console.log(result);
+        return res.status(200).json({
+          success: true,
+          message: "Get Posts Successful",
+          posts: result.docs,
+        });
+      });
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
     }
@@ -36,12 +49,14 @@ const handler = nc()
       const post = await Post.create(postContent);
       const response = await post.save();
       if (response) {
-        res.status(200).json({ success: true, post });
+        return res.status(200).json({ success: true, post });
       }
-      res.status(500).json({ success: false, message: "Failed to append" });
+      return res
+        .status(500)
+        .json({ success: false, message: "Failed to append" });
       // }
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      return res.status(500).json({ success: false, message: error.message });
     }
   })
   // .patch((req: NextApiRequest, res: NextApiResponse) =>
@@ -54,11 +69,13 @@ const handler = nc()
     try {
       const response = await Post.deleteOne({ _id: req.query.id });
       if (response.deletedCount === 1) {
-        res.status(200).json({ success: true });
+        return res.status(200).json({ success: true });
       }
-      res.status(500).json({ success: false, message: "Failed to delete" });
+      return res
+        .status(500)
+        .json({ success: false, message: "Failed to delete" });
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      return res.status(500).json({ success: false, message: error.message });
     }
   });
 

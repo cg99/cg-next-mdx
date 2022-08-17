@@ -1,28 +1,12 @@
-import axios from 'axios';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { RiDeleteBin2Line } from 'react-icons/ri';
+import { useState } from 'react';
 import Layout from '../../../components/dashboard/Layout';
-import { IPost } from '../../../utils/interface/IPost';
+import Page from '../../../components/dashboard/posts/Page';
+
 
 const Posts = () => {
-    const [posts, setPosts] = useState<IPost[]>([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchPosts = async () => {
-            const res = await axios.get('/api/posts');
-            console.log(res.data);
-            setPosts(res.data.posts);
-            setLoading(false);
-        }
-        fetchPosts();
-    }, []);
-
-    const deletePost = async (id: number | string) => {
-        await axios.delete(`/api/posts/?id=${id}`);
-        setPosts(posts.filter(post => post._id !== id));
-    }
+    const [pageIndex, setPageIndex] = useState(1);
+    const [limit, setLimit] = useState(5);
 
     return (
         <Layout>
@@ -35,25 +19,12 @@ const Posts = () => {
                 </div>
             </div>
 
-            {loading ? <div>loading...</div> : (
-                <div className='flex flex-wrap'>
-                    {posts.map((post) => (
-                        <div key={post._id} className='w-full my-2 p-4 border border-solid hover:border-dotted border-slate-200'>
-                            <div className="flex">
-                                <Link href={`/dashboard/posts/edit?id=${post._id}`}>
-                                    <a className='block w-full h-full'>
-                                        {post.title}
-                                    </a>
-                                </Link>
-                                <button className='text-red-500' onClick={() => deletePost(post._id)}>
-                                    <RiDeleteBin2Line />
-                                </button>
-                            </div>
-                            {post?.createdAt && <div className='block text-xs text-slate-400'>Posted on: {new Date(post?.createdAt).toLocaleDateString('en-us', { year: "numeric", month: "short", day: "numeric" })}</div>}
-                        </div>
-                    ))}
-                </div>
-            )}
+            <Page index={pageIndex} limit={limit} />
+            {/* prefetch the next page */}
+            <div style={{ display: 'none' }}><Page index={pageIndex + 1} limit={limit} /></div>
+            <button className="rounded-none bg-gray-500 text-white px-4 py-2" onClick={() => setPageIndex(pageIndex <= 0 ? 1 : (pageIndex - 1))}>Previous</button>
+            <button className="rounded-none bg-gray-500 text-white ml-5 px-4 py-2" onClick={() => setPageIndex(pageIndex + 1)}>Next</button>
+
         </Layout>
     )
 }

@@ -3,7 +3,7 @@ import mongoose, { ConnectOptions } from 'mongoose';
 import { GetStaticProps } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import { MdArrowBack } from 'react-icons/md';
 import Template from '../../components/Template';
 import Post from '../../models/Post';
@@ -16,6 +16,14 @@ const SinglePost = ({ post }) => {
     const parsedPost = JSON.parse(post);
 
     const router = useRouter()
+
+    useEffect(() => {
+        if (parsedPost) {
+            document.title = 'Codegenes ' + parsedPost?.title;
+
+            console.log(parsedPost?.title)
+        }
+    }, [])
 
     return (
         <Template>

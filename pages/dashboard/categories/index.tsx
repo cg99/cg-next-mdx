@@ -2,17 +2,27 @@ import axios from 'axios';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 import { RiDeleteBin2Line } from 'react-icons/ri';
+import useSWR from 'swr';
 import Layout from '../../../components/dashboard/Layout'
 import { ICategory } from '../../../utils/interface/ICategory';
+import { fetcher } from '../../../utils/swr/fetcher';
+
 
 const index = () => {
     const [categories, setCategories] = useState<ICategory[]>([]);
     const [loading, setLoading] = useState(true);
 
+    const { data, error } = useSWR('/api/categories', fetcher)
+
+    if (error) return <div>failed to load</div>
+    if (!data) return <div>loading...</div>
+
     useEffect(() => {
+        console.log(data);
+
         (async () => {
             const res = await axios.get('/api/categories');
-            console.log(res.data);
+            // console.log(res.data);
             setCategories(res.data.categories);
             setLoading(false);
         })();
@@ -34,24 +44,22 @@ const index = () => {
                 </div>
             </div>
 
-            {loading ? <div>loading...</div> : (
-                <div className='flex flex-wrap'>
-                    {categories?.map((category) => (
-                        <div key={category._id} className='w-full my-2 p-4 border border-solid hover:border-dotted border-slate-200'>
-                            <div className="flex">
-                                <Link href={`/dashboard/categories/edit?id=${category._id}`}>
-                                    <a className='block w-full h-full'>
-                                        {category.title}
-                                    </a>
-                                </Link>
-                                <button className='text-red-500' onClick={() => deleteCategory(Number(category._id))}>
-                                    <RiDeleteBin2Line />
-                                </button>
-                            </div>
+            <div className='flex flex-wrap'>
+                {categories?.map((category) => (
+                    <div key={category._id} className='w-full my-2 p-4 border border-solid hover:border-dotted border-slate-200'>
+                        <div className="flex">
+                            <Link href={`/dashboard/categories/edit?id=${category._id}`}>
+                                <a className='block w-full h-full'>
+                                    {category.title}
+                                </a>
+                            </Link>
+                            <button className='text-red-500' onClick={() => deleteCategory(Number(category._id))}>
+                                <RiDeleteBin2Line />
+                            </button>
                         </div>
-                    ))}
-                </div>
-            )}
+                    </div>
+                ))}
+            </div>
         </Layout>
     )
 }

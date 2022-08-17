@@ -51,7 +51,7 @@ const handler = nc()
       if (postId) {
         await Post.findByIdAndUpdate(postId, postContent, (err, docs) => {
           if (err) {
-            res
+            return res
               .status(500)
               .json({ success: false, message: "Failed to update. " + err });
           }
