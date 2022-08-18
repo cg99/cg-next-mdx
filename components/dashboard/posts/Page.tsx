@@ -6,10 +6,10 @@ import { RiDeleteBin2Line } from 'react-icons/ri';
 import { useSWRConfig } from 'swr';
 import { usePosts } from '../../../utils/swr/usePosts';
 
-const Page = ({ index, limit }) => {
+const Page = ({ index, limit, searchKeyword }) => {
     const { mutate } = useSWRConfig()
 
-    const url = `/api/posts?page=${index}&limit=${limit}`; // get posts api
+    const url = `/api/posts?page=${index}&limit=${limit}&q=${searchKeyword}`; // get posts api
     const { data, isError, isLoading } = usePosts(url);
 
     if (isError) return <div>failed to load</div>

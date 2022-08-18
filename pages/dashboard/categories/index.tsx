@@ -1,37 +1,12 @@
-import axios from 'axios';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react'
-import { RiDeleteBin2Line } from 'react-icons/ri';
-import useSWR from 'swr';
-import Layout from '../../../components/dashboard/Layout'
-import { ICategory } from '../../../utils/interface/ICategory';
-import { fetcher } from '../../../utils/swr/fetcher';
+import { useState } from 'react';
+import CategoryPage from '../../../components/dashboard/categories/CategoryPage';
+import Layout from '../../../components/dashboard/Layout';
 
 
 const index = () => {
-    const [categories, setCategories] = useState<ICategory[]>([]);
-    const [loading, setLoading] = useState(true);
-
-    const { data, error } = useSWR('/api/categories', fetcher)
-
-    if (error) return <div>failed to load</div>
-    if (!data) return <div>loading...</div>
-
-    useEffect(() => {
-        console.log(data);
-
-        (async () => {
-            const res = await axios.get('/api/categories');
-            // console.log(res.data);
-            setCategories(res.data.categories);
-            setLoading(false);
-        })();
-    }, []);
-
-    const deleteCategory = async (id: number) => {
-        await axios.delete(`/api/categories/?id=${id}`);
-        setCategories(categories.filter(category => category._id !== id));
-    }
+    const [pageIndex, setPageIndex] = useState(1);
+    const [limit, setLimit] = useState(5);
 
     return (
         <Layout>
@@ -44,22 +19,14 @@ const index = () => {
                 </div>
             </div>
 
-            <div className='flex flex-wrap'>
-                {categories?.map((category) => (
-                    <div key={category._id} className='w-full my-2 p-4 border border-solid hover:border-dotted border-slate-200'>
-                        <div className="flex">
-                            <Link href={`/dashboard/categories/edit?id=${category._id}`}>
-                                <a className='block w-full h-full'>
-                                    {category.title}
-                                </a>
-                            </Link>
-                            <button className='text-red-500' onClick={() => deleteCategory(Number(category._id))}>
-                                <RiDeleteBin2Line />
-                            </button>
-                        </div>
-                    </div>
-                ))}
-            </div>
+            <CategoryPage index={pageIndex} limit={limit} />
+            {/* prefetch the next page */}
+            <div style={{ display: 'none' }}><CategoryPage index={pageIndex + 1} limit={limit} /></div>
+
+            {/* if page index is 1 don't show previous button */}
+            {pageIndex <= 1 ? null : <button className="rounded-none bg-gray-500 text-white px-4 py-2 mr-5" onClick={() => setPageIndex(pageIndex - 1)}>Previous</button>}
+
+            <button className="rounded-none bg-gray-500 text-white px-4 py-2" onClick={() => setPageIndex(pageIndex + 1)}>Next</button>
         </Layout>
     )
 }

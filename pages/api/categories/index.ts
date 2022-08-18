@@ -23,20 +23,32 @@ export const config = {
 const handler = nc()
   // .use(withAuth)
   .get(async (req: NextApiRequest, res: NextApiResponse) => {
-    const categoryId = req.query.id;
-
+    const { page = 1, limit = 5, id: categoryId } = req.query;
+    const options = {
+      page,
+      limit,
+    };
     try {
       if (categoryId) {
+        // get one category by id
         const category = await Category.findById(categoryId);
         return res
           .status(200)
           .json({ success: true, message: "Get Post Successful", category });
       }
 
-      const categories = await Category.find();
-      return res
-        .status(200)
-        .json({ success: true, message: "Get Posts Successful", categories });
+      // get multiple categories
+      await Category.paginate({}, options, function (err, result) {
+        if (err) {
+          return res.status(500).json({ success: false, message: err });
+        }
+
+        return res.status(200).json({
+          success: true,
+          message: "Get Categories Successful",
+          categories: result.docs,
+        });
+      });
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
     }

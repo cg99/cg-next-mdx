@@ -9,6 +9,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import nc from "next-connect";
 import connectDB from "../../../utils/db";
 import Post from "../../../models/Post";
+import { QueryOptions } from "mongoose";
 
 export const config = {
   api: {
@@ -21,13 +22,27 @@ export const config = {
 const handler = nc()
   // .use(withAuth)
   .get(async (req: NextApiRequest, res: NextApiResponse) => {
-    const { page = 1, limit = 5 } = req.query;
+    const { page = 1, limit = 5, q: searchKeyword = "" } = req.query;
+
+    let query: QueryOptions = {};
+    if (searchKeyword) {
+      // query.title = {
+      //   $regex: new RegExp(searchKeyword.toString()),
+      //   $options: "i",
+      // };
+      query.content = {
+        $regex: new RegExp(searchKeyword.toString()),
+        $options: "i",
+      };
+    }
+
     const options = {
+      sort: { createdAt: -1 },
       page,
       limit,
     };
     try {
-      await Post.paginate({}, options, function (err, result) {
+      await Post.paginate(query, options, function (err, result) {
         if (err) {
           return res.status(500).json({ success: false, message: err });
         }
