@@ -11,6 +11,7 @@ import InputField from '../../../components/dashboard/form/InputField';
 import slugify from 'slugify';
 import { ICategory } from '../../../utils/interface/ICategory';
 import Select from 'react-select';
+import { IPost } from '../../../utils/interface/IPost';
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
     ssr: false,
@@ -20,11 +21,7 @@ const QuillNoSSRWrapper = dynamic(import('react-quill'), {
 
 const AddPost = () => {
 
-    const [post, setPost] = useState({
-        slug: '',
-        postCreated: false,
-        uploadedFeaturedImage: null,
-    });
+    const [post, setPost] = useState<IPost | null>(null);
 
     const modules = {
         toolbar: [
@@ -69,7 +66,9 @@ const AddPost = () => {
             {showToastMessage && ToastMessage}
 
             <Formik
-                initialValues={{ title: '', slug: '', content: '', categories: [], featuredImage: post.uploadedFeaturedImage }}
+                initialValues={{
+                    title: '', slug: '', content: '', categories: [], featuredImage: null
+                }}
                 validate={values => {
                     const errors: any = {};
                     if (!values.title) {
@@ -78,15 +77,15 @@ const AddPost = () => {
                     return errors;
                 }}
                 onSubmit={async (values, { setSubmitting }) => {
-                    console.log(values);
+                    // console.log(values);
 
                     // return;
 
-                    const bodyContent = { ...values, featuredImage: post.uploadedFeaturedImage }
+                    const bodyContent = { ...values, featuredImage: post?.featuredImage || null }
                     const data = await axios.post('/api/posts', bodyContent)
                         .then(res => {
                             if (res.data.success === true) {
-                                setPost({ ...post });
+                                setPost(res.data.post);
                                 setShowToastMessage(true);
                             } else {
                                 console.error('error', res.data)

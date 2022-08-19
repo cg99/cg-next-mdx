@@ -80,8 +80,6 @@ const EditPost: NextPage = () => {
         }
     })
 
-
-
     // if post is updated
     const [showToastMessage, setShowToastMessage] = useState(false);
 
@@ -93,7 +91,7 @@ const EditPost: NextPage = () => {
             {showToastMessage && ToastMessage}
 
             {!loading && post && <Formik
-                initialValues={{ title: post?.title || '', slug: post?.slug || '', content: post?.content || '', categories: post?.categories || '', featuredImage: post?.featuredImage || '' }}
+                initialValues={{ title: post?.title || '', slug: post?.slug || '', content: post?.content || '', categories: post?.categories || '', featuredImage: post?.featuredImage || null }}
                 validate={values => {
                     const errors: any = {};
                     if (!values.title) {

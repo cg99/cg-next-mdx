@@ -9,7 +9,7 @@ const ImageInput = ({ post, setPost, handleBlur }) => {
         <div>
             <label className="block text-sm font-medium text-gray-700">Featured Image</label>
 
-            {post.featuredImage ?
+            {post?.featuredImage ?
                 <div className='block'>
                     <div>
                         <Image src={`/uploads/${post.featuredImage}`}

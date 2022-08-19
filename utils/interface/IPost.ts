@@ -3,7 +3,7 @@ export interface IPost {
   title: string;
   slug: string;
   content?: string;
-  featuredImage?: string;
+  featuredImage?: string | null;
   categories?: {
     value: string;
     label: string;
