@@ -1,6 +1,7 @@
 import { Field } from 'formik';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useDebounce } from 'use-debounce';
 import Layout from '../../../components/dashboard/Layout';
 import Page from '../../../components/dashboard/posts/Page';
 
@@ -9,6 +10,8 @@ const Posts = () => {
     const [pageIndex, setPageIndex] = useState(1);
     const [limit, setLimit] = useState(5);
     const [searchKeyword, setSearchKeyword] = useState('');
+    const [searchValue] = useDebounce(searchKeyword, 1000);
+
 
     return (
         <Layout>
@@ -31,12 +34,12 @@ const Posts = () => {
                 </div>
             </div>
 
-            <Page searchKeyword={searchKeyword}
+            <Page searchKeyword={searchValue}
                 index={pageIndex}
                 limit={limit} />
             {/* prefetch the next page */}
             <div style={{ display: 'none' }}>
-                <Page searchKeyword={searchKeyword}
+                <Page searchKeyword={searchValue}
                     index={pageIndex + 1}
                     limit={limit} />
             </div>
