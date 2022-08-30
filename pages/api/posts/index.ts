@@ -22,7 +22,7 @@ export const config = {
 const handler = nc()
   // .use(withAuth)
   .get(async (req: NextApiRequest, res: NextApiResponse) => {
-    const { page = 1, limit = 5, q: searchKeyword = "" } = req.query;
+    const { page = 1, limit = undefined, q: searchKeyword = "" } = req.query;
 
     let query: QueryOptions = {};
     if (searchKeyword) {
@@ -40,6 +40,7 @@ const handler = nc()
       sort: { createdAt: -1 },
       page,
       limit,
+      pagination: !limit ? false : true,
     };
     try {
       await Post.paginate(query, options, function (err, result) {
@@ -95,3 +96,6 @@ const handler = nc()
   });
 
 export default connectDB(handler);
+
+// refs
+// https://github.com/aravindnc/mongoose-paginate-v2/issues/85

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import mongoose, { ConnectOptions } from 'mongoose';
+// import mongoose, { ConnectOptions } from 'mongoose';
 import { GetStaticProps } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
