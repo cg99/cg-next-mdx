@@ -22,7 +22,14 @@ export const config = {
 const handler = nc()
   // .use(withAuth)
   .get(async (req: NextApiRequest, res: NextApiResponse) => {
-    const { page = 1, limit = undefined, q: searchKeyword = "" } = req.query;
+    const {
+      page = 1,
+      limit = undefined,
+      q: searchKeyword = "",
+      slug,
+    } = req.query;
+
+    console.log(slug);
 
     let query: QueryOptions = {};
     if (searchKeyword) {
@@ -30,10 +37,12 @@ const handler = nc()
       //   $regex: new RegExp(searchKeyword.toString()),
       //   $options: "i",
       // };
-      query.content = {
+      const content = {
         $regex: new RegExp(searchKeyword.toString()),
         $options: "i",
       };
+
+      query = { categories: [{ label: slug }], content };
     }
 
     const options = {

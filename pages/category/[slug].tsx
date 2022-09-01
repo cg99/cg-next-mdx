@@ -2,6 +2,7 @@ import axios from 'axios';
 import router from 'next/router';
 import React, { useEffect, useState } from 'react'
 import Post from '../../components/Post';
+import Template from '../../components/Template';
 import { IPost } from '../../utils/interface/IPost';
 
 const index = ({ slug }) => {
@@ -22,15 +23,17 @@ const index = ({ slug }) => {
 
 
     return (
-        <div className='container mx-auto'>
-            <div className="grid md:grid-cols-3 sm:grid-cols-2 gap-4">
-                {
-                    loading ? <div>Loading...</div> : posts?.map(post =>
-                        <Post key={post._id} post={post} />
-                    )
-                }
+        <Template>
+            <div className='container mx-auto'>
+                <div className="grid md:grid-cols-3 sm:grid-cols-2 gap-4">
+                    {
+                        loading ? <div>Loading...</div> : posts?.map(post =>
+                            <Post key={post._id} post={post} />
+                        )
+                    }
+                </div>
             </div>
-        </div>
+        </Template>
     )
 }
 

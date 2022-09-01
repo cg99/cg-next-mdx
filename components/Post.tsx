@@ -6,7 +6,7 @@ const Post = ({ post }) => {
 
     return (
         <div className='p-6 m-2 mt-4 rounded-lg shadow-lg hover:shadow-gray-400 relative'>
-            <Link href={`/posts/${post._id}`}>
+            <Link href={`/posts/${post.slug}`}>
                 <div className='hover:cursor-pointer'>
                     <div className='w-full h-56 relative'>
                         <Image src={post?.featuredImage ? ("/uploads/" + post?.featuredImage) : '/images/placeholder.webp'}

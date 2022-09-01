@@ -5,10 +5,10 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Suspense, useEffect } from 'react';
 import { MdArrowBack } from 'react-icons/md';
-import Template from '../../components/Template';
-import Post from '../../models/Post';
+import Template from '../components/Template';
+import Post from '../models/Post';
 const DOMPurify = require('isomorphic-dompurify');
-import db from '../../utils/db-page-not-used'
+import db from '../utils/db-page-not-used'
 
 const SITE_URL = 'http://localhost:3000'
 
