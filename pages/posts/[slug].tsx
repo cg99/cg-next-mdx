@@ -1,31 +1,28 @@
 import axios from 'axios';
 // import mongoose, { ConnectOptions } from 'mongoose';
-import { GetStaticProps } from 'next';
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { ParsedUrlQuery } from 'querystring';
 import { Suspense, useEffect, useState } from 'react';
 import { MdArrowBack } from 'react-icons/md';
 import Template from '../../components/Template';
 import Post from '../../models/Post';
 const DOMPurify = require('isomorphic-dompurify');
 import db from '../../utils/db-page-not-used'
+import { IPost } from '../../utils/interface/IPost';
 
-const SITE_URL = 'http://localhost:3000'
+const SITE_URL = 'http://localhost:3000';
+
+
 
 const SlugPost = ({ post }) => {
 
-    const [parsedPost, setParsedPost] = useState(JSON.parse(post));
+    const router = useRouter();
 
-    const router = useRouter()
-
-    // useEffect(() => {
-    //     console.log(parsedPost);
-    //     if (parsedPost) {
-    //         document.title = 'Codegenes ' + parsedPost?.title;
-
-    //         console.log(parsedPost?.title)
-    //     }
-    // }, [parsedPost])
+    if (router.isFallback) {
+        return <div>Loading...</div>
+    }
 
     return (
         <Template>
@@ -33,30 +30,29 @@ const SlugPost = ({ post }) => {
                 <MdArrowBack />
             </button>
 
-            {/* <Suspense fallback={<div>Loading</div>}> */}
-            {JSON.parse(post) &&
+            {!post ? null :
                 <div className='p-6 m-2 mt-4 shadow-sm relative'>
                     <div className='w-full h-64 relative'>
-                        <Image src={parsedPost?.featuredImage ? ("/uploads/" + parsedPost?.featuredImage) : '/images/placeholder.webp'}
+                        <Image src={post?.featuredImage ? ("/uploads/" + post?.featuredImage) : '/images/placeholder.webp'}
                             layout='fill'
                             objectFit='contain'
-                            alt={parsedPost?.title}
+                            alt={post?.title}
                             priority
                         />
                     </div>
 
-                    <h3 className='text-md text-blue-700 my-2'>{parsedPost?.category}</h3>
+                    {/* <h3 className='text-md text-blue-700 my-2'>{post?.category}</h3> */}
 
-                    <h2 className='text-2xl font-bold'>{parsedPost?.title}</h2>
+                    <h2 className='text-2xl font-bold'>{post?.title}</h2>
 
                     <div className='text-slate-500 my-2'>
-                        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(parsedPost?.content) }} />
+                        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post?.content) }} />
                     </div>
 
                     <div>
                         <div className="author">codegenius</div>
                         <div className='text-slate-500'>
-                            {new Date(parsedPost?.createdAt).toLocaleDateString('en-AU', {
+                            {new Date(post?.createdAt).toLocaleDateString('en-AU', {
                                 day: 'numeric',
                                 month: 'short',
                                 year: 'numeric',
@@ -65,12 +61,11 @@ const SlugPost = ({ post }) => {
                     </div>
                 </div>
             }
-            {/* </Suspense> */}
         </Template >
     )
 }
 
-export async function getStaticPaths() { // get all posts
+export const getStaticPaths: GetStaticPaths = async () => { // get all posts
 
     const posts = await axios.get(SITE_URL + '/api/posts/')
         .then(res => res.data?.posts)
@@ -84,12 +79,17 @@ export async function getStaticPaths() { // get all posts
 
     return {
         paths,
-        fallback: false
+        fallback: false,
     }
 }
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-    const postSlug = params?.slug;
+interface IParams extends ParsedUrlQuery {
+    slug: string
+}
+
+export const getStaticProps: GetStaticProps = async (context) => {
+    const { slug: postSlug } = context.params as IParams;
+    // const postSlug = params?.slug;
 
     if (postSlug) {
         const post = await axios.get(SITE_URL + '/api/posts/slug/' + postSlug)
@@ -98,7 +98,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
         return {
             props: {
-                post: post ? JSON.stringify(post) : null
+                post: post ? post[0] : null
             }
         }
     } else {

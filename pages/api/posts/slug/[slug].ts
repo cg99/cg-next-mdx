@@ -37,7 +37,6 @@ const handler = nc()
       if (slug) {
         const post = await Post.find({ slug });
 
-        // console.log(post, "slag");
         return res.status(200).json({ post });
       }
 
