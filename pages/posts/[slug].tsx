@@ -31,7 +31,7 @@ const SlugPost = ({ post }) => {
             </button>
 
             {!post ? null :
-                <div className='p-6 m-2 mt-4 shadow-sm relative'>
+                <article className='p-6 m-2 mt-4 shadow-sm relative'>
                     <div className='w-full h-64 relative'>
                         <Image src={post?.featuredImage ? ("/uploads/" + post?.featuredImage) : '/images/placeholder.webp'}
                             layout='fill'
@@ -41,7 +41,7 @@ const SlugPost = ({ post }) => {
                         />
                     </div>
 
-                    {/* <h3 className='text-md text-blue-700 my-2'>{post?.category}</h3> */}
+                    <h3 className='text-md text-blue-700 my-2'>{post?.categories[0]?.label}</h3>
 
                     <h2 className='text-2xl font-bold'>{post?.title}</h2>
 
@@ -50,7 +50,7 @@ const SlugPost = ({ post }) => {
                     </div>
 
                     <div>
-                        <div className="author">codegenius</div>
+                        {/* <div className="author">codegenius</div> */}
                         <div className='text-slate-500'>
                             {new Date(post?.createdAt).toLocaleDateString('en-AU', {
                                 day: 'numeric',
@@ -59,7 +59,7 @@ const SlugPost = ({ post }) => {
                             })}
                         </div>
                     </div>
-                </div>
+                </article>
             }
         </Template >
     )

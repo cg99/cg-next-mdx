@@ -1,12 +1,14 @@
 // fronted wrapper
-import type { NextPage } from 'next'
 import Head from 'next/head'
-import Footer from '../components/Footer'
-import FrontPage from '../components/FrontPage'
+import { useEffect, useState } from 'react'
+import useSWR from 'swr'
 import Logo from '../components/Logo'
 import Navbar from '../components/Navbar'
+import { IPost } from '../utils/interface/IPost'
+import { fetcher } from '../utils/swr/fetcher'
 
-export default function Template({ children }) {
+export default function Template({ children, searchValue, setSearchValue }) {
+
     return (
         <>
             <Head>
@@ -16,13 +18,14 @@ export default function Template({ children }) {
             </Head>
 
             <Logo />
-            <Navbar />
+
+            <Navbar searchValue={searchValue} setSearchValue={setSearchValue} />
 
             <main className='mx-20 my-5'>
                 {children}
             </main >
 
-            <Footer />
+            {/* <Footer /> */}
         </>
     )
 }

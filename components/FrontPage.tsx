@@ -3,7 +3,7 @@ import { usePaginatePosts } from '../hooks/useRequests';
 import { IPost } from '../utils/interface/IPost';
 import Post from './Post';
 
-const FrontPage: NextPage = () => {
+const FrontPage: NextPage = (props) => {
     const {
         posts,
         error,
@@ -26,7 +26,7 @@ const FrontPage: NextPage = () => {
             </div>
 
             <button
-                className={`rounded-b-lg ${isReachingEnd ? 'bg-gray-500' : 'bg-indigo-500'} mt-10 px-4 py-2 text-white`}
+                className={`rounded-b-lg ${isReachingEnd ? 'bg-gray-500' : 'bg-indigo-500'} my-10 px-4 py-2 text-white`}
                 disabled={isLoadingMore || isReachingEnd}
                 onClick={() => setSize(size + 1)}
             >

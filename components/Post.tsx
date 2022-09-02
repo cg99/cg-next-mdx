@@ -17,16 +17,16 @@ const Post = ({ post }) => {
                         />
                     </div>
 
-                    <h3 className='text-md text-blue-700 my-2'>{post?.category}</h3>
+                    <h3 className='text-md text-blue-700 my-2'>{post?.categories[0]?.label}</h3>
 
                     <h2 className='text-2xl font-bold hover:text-red-500'>{post.title}</h2>
 
-                    <div className='text-slate-500 my-2'>
-                        {/* <div dangerouslySetInnerHTML={{ __html: (post?.content).replace(/<img .*?>/g, "").substr(0, 150) }}></div> */}
-                    </div>
+                    {/* <div className='text-slate-500 my-2'>
+                        <div dangerouslySetInnerHTML={{ __html: (post?.content).replace(/<img .*?>/g, "").substr(0, 150) }}></div>
+                    </div> */}
 
                     <div>
-                        <div className="author">codegenius</div>
+                        {/* <div className="author">codegenius</div> */}
                         <div className='text-slate-500'>
                             {new Date(post?.createdAt).toLocaleDateString('en-AU', {
                                 day: 'numeric',
