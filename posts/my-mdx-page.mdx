@@ -1,0 +1,32 @@
+---
+title: "New Title"
+date: "March 8, 2021"
+excerpt: "Django is a very powerful, high level Python framework for building web applications"
+cover_image: "/images/posts/balls-min.jpg"
+---
+
+import Template from "../components/Template";
+
+# My MDX page
+
+This is a list in markdown:
+
+- One
+- Two
+- Three
+
+~~The world is flat.~~
+
+- [x] Write the press release
+- [ ] Update the website
+- [ ] Contact the media
+
+```
+{
+  "firstName": "John",
+  "lastName": "Smith",
+  "age": 25
+}
+```
+
+export default ({ children }) => <Template>{children}</Template>;

@@ -1,11 +1,8 @@
 // fronted wrapper
 import Head from 'next/head'
-import { useEffect, useState } from 'react'
-import useSWR from 'swr'
 import Logo from '../components/Logo'
 import Navbar from '../components/Navbar'
-import { IPost } from '../utils/interface/IPost'
-import { fetcher } from '../utils/swr/fetcher'
+import Footer from './Footer'
 
 export default function Template({ children, searchValue, setSearchValue }) {
 
@@ -19,13 +16,13 @@ export default function Template({ children, searchValue, setSearchValue }) {
 
             <Logo />
 
-            <Navbar searchValue={searchValue} setSearchValue={setSearchValue} />
+            <Navbar />
 
             <main className='mx-20 my-5'>
                 {children}
             </main >
 
-            {/* <Footer /> */}
+            <Footer />
         </>
     )
 }
