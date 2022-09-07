@@ -1,10 +1,25 @@
 {
-  "extends": "next/core-web-vitals",
+  "extends": ["plugin:mdx/recommended", "next/core-web-vitals"],
   "plugins": [
-    "react-hooks"
+    "react-hooks",
+    "@1stg/remark-config",
+    // change to error severity, notice `[]` is required
+    ["lint-no-duplicate-headings", [2]],
+    // disable following plugin
+    [
+      "lint-no-multiple-toplevel-headings",
+      [0] // or false
+    ]
   ],
   "rules": {
     "react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
     "react-hooks/exhaustive-deps": "warn" // Checks effect dependencies
+  },
+  // optional, if you want to lint code blocks at the same time
+  "settings": {
+    "mdx/code-blocks": true,
+    // optional, if you want to disable language mapper, set it to `false`
+    // if you want to override the default language mapper inside, you can provide your own
+    "mdx/language-mapper": {}
   }
 }
