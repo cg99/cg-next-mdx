@@ -9,7 +9,7 @@ const Post = ({ post }) => {
             <Link href={`/blog/${post.slug}`}>
                 <div className='hover:cursor-pointer'>
                     <div className='w-full h-56 relative'>
-                        <Image src={post.frontmatter.cover_image}
+                        <Image src={post.frontmatter?.cover_image ? post.frontmatter.cover_image : '/images/placeholder.webp'}
                             layout='fill'
                             objectFit='cover'
                             alt={post.title}
@@ -17,7 +17,7 @@ const Post = ({ post }) => {
                         />
                     </div>
 
-                    {/* <h3 className='text-md text-blue-700 my-2'>{post?.categories[0]?.label}</h3> */}
+                    <h3 className='text-md text-blue-700 my-2'>{post.frontmatter?.categories}</h3>
 
                     <h2 className='text-2xl font-bold hover:text-red-500'>{post.frontmatter.title}</h2>
 

@@ -11,7 +11,7 @@ import { marked } from 'marked';
 
 
 const SlugPost = ({
-    frontmatter: { title, date, cover_image },
+    frontmatter: { title, date, cover_image, categories },
     slug,
     content,
 }) => {
@@ -39,19 +39,20 @@ const SlugPost = ({
                         />
                     </div>
 
-                    {/* <h3 className='text-md text-blue-700 my-2'>{post?.categories[0]?.label}</h3> */}
-
                     <h2 className='text-2xl font-bold'>{title}</h2>
 
-                    <div className='text-slate-500 my-2'>
-                        <div dangerouslySetInnerHTML={{ __html: marked(content) }} />
-                    </div>
+                    <h3 className='text-md text-blue-700 my-2'>{categories}</h3>
 
                     <div>
                         {/* <div className="author">codegenius</div> */}
                         <div className='text-slate-500'>
                             {date}
                         </div>
+                    </div>
+
+
+                    <div className='text-slate-500 my-2'>
+                        <div dangerouslySetInnerHTML={{ __html: marked(content) }} />
                     </div>
                 </article>
             }

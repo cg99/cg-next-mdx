@@ -1,77 +1,67 @@
-import axios from 'axios';
 import Link from 'next/link';
-import React, { useContext, useEffect, useState } from 'react'
-import useSWR from 'swr';
-import { useDebounce } from 'use-debounce';
-// import { AppContext } from '../context/AppContext';
-import { ICategory } from '../utils/interface/ICategory';
-import { IPost } from '../utils/interface/IPost';
-// import { fetcher } from '../utils/swr/fetcher';
+import { Suspense, useEffect, useState } from 'react';
+import _ from 'lodash';
+import { RiSearchEyeLine } from 'react-icons/ri';
 
-const Navbar = () => {
 
-    const [categories, setCategories] = useState<ICategory[] | null>(null);
+function Navbar() {
+    const [categories, setCategories] = useState([
+        'JavaScript', 'React JS',
+        'Node.js', 'C/C++',
+        'ExpressJS', 'PostgreSQL',
+        'SQLite', 'Laravel',
+        'Vue.js', 'HTML/CSS',
+        'django', 'Mongoose',
+        'Bulma', 'MySQL',
+        'PHP', 'SQL',
+        'Python', 'Deno',
+        'MongoDB',
+    ]);
 
-    useEffect(() => { // get caategories
-        (async () => {
-            const res = await axios.get('/api/categories');
-            setCategories(res.data.categories);
-        })();
+    useEffect(() => {
+        setCategories(_.shuffle(categories));
     }, []);
 
-    // search
-    const [searchResult, setSearchResult] = useState([]);
-
-    // useEffect(() => {
-    //     if (value !== '') {
-    //         axios.get('/api/posts', {
-    //             params: {
-    //                 q: value
-    //             }
-    //         }).then(res => {
-    //             if (res.data) {
-    //                 setSearchResult(res.data?.posts);
-    //                 console.log(searchResult);
-    //             }
-    //         }).catch(e => console.log(e));
-    //     }
-    // }, [state])
-
+    const [searchValue, setSearchValue] = useState('');
 
     return (
         <div className='bg-blue-800 px-16 flex justify-between'>
             <ul className='flex text-slate-50'>
-                {categories?.slice(0, 8).map(category => (
-                    <li className='px-4 py-4 hover:bg-blue-900' key={category?._id}>
-                        <Link href={`/category/${category?.slug}`}>
-                            <a>{category?.title}</a>
-                        </Link>
-                    </li>
-                ))}
-
+                <Suspense>
+                    {categories?.slice(0, 8).map((category, idx) => (
+                        <li className='px-4 py-4 hover:bg-blue-900' key={idx}>
+                            <Link href={{
+                                pathname: '/',
+                                query: { category: category },
+                            }}>
+                                <a className='text-white'>{category}</a>
+                            </Link>
+                        </li>
+                    ))}
+                </Suspense>
             </ul>
 
-            {/* <div className="flex rounded-md shadow-sm justify-center relative">
-                <input
-                    id='searchPost'
-                    className="shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border border-gray-300 rounded-sm mx-auto my-2 px-3 text-gray-700 leading-tight focus:outline-none"
-                    placeholder={`search for a post`}
-                    type='search'
-                    name='search_post'
-                    onChange={(e) => {
-                        // console.log(e.target.value);
-                        // setState(state => ({ ...state, searchValue: e.target.value }));
-                    }}
-                />
+            <div className="flex rounded-md shadow-sm justify-center relative items-center">
+                <div className="xl:w-64">
+                    <div className="my-auto input-group relative flex items-stretch w-full">
+                        <input type="search" className="form-control relative flex-auto min-w-0 block w-full px-4 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-gray-300 rounded-l-full transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" placeholder="Search" aria-label="Search" aria-describedby="button-addon2" onChange={(e) => {
+                            // console.log(e.target.value);
+                            setSearchValue(e.target.value);
+                        }} />
+                        <button className="inline-block px-4 py-2 bg-blue-600 text-white font-medium text-xs leading-tight uppercase shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out flex items-center" type="button">
+                            <Link href={{
+                                pathname: '/',
+                                query: { search: searchValue }
+                            }}>
+                                <a className='text-white text-xl'>
+                                    <RiSearchEyeLine />
+                                </a>
+                            </Link>
 
-                <div className="search-results absolute top-16 bg-gray-100 z-10 p-5">
-                    <ul>
-                        {searchResult?.map((post: IPost) => (
-                            <li key={post?._id}>{post?.title}</li>
-                        ))}
-                    </ul>
+                        </button>
+                    </div>
                 </div>
-            </div> */}
+            </div>
         </div>
     )
 }

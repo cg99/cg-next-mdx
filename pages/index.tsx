@@ -8,34 +8,45 @@ import fs from 'fs'
 import { sortByDate } from '../utils';
 import Link from 'next/link';
 import Post from '../components/Post';
+import { useRouter } from 'next/router';
 
 function Home({ posts }) {
-  const [searchValue, setSearchValue] = useState('');
-  // console.log(posts);
+  const router = useRouter();
+  const { category, search } = router.query;
+
+  if (search) {
+    posts = posts?.filter(post => post?.content?.includes(search));
+  }
+
   return (
-    <Template searchValue={searchValue} setSearchValue={setSearchValue}>
+    <Template searchValue={undefined} setSearchValue={undefined}>
       {/* <h1>Latest Posts</h1> */}
-      <div className='container mx-auto text-center'>
+      <div className='mx-auto text-center'>
 
         <div className="grid md:grid-cols-3 sm:grid-cols-2 gap-4 text-left">
-          {posts?.map((post, idx) => (
+          {category ? posts?.filter(post => post?.frontmatter?.categories?.includes(category)).map((post, idx) =>
+            <Post key={idx} post={post} />
+          ) : posts?.map((post, idx) => (
             <Post key={idx} post={post} />
           ))}
         </div>
+
       </div>
 
     </Template>
   );
 }
 
+
 export const getStaticProps: GetStaticProps = () => {
   // Get files from the posts dir
   const files = fs.readdirSync(path.join('posts'))
 
+
   // Get slug and frontmatter from posts
   const posts = files.map((filename) => {
     // Create slug
-    const slug = filename.replace('.mdx', '').replace('.md', '')
+    const slug = filename.replace('.mdx', "")
 
     // Get frontmatter
     const markdownWithMeta = fs.readFileSync(
@@ -43,13 +54,23 @@ export const getStaticProps: GetStaticProps = () => {
       'utf-8'
     )
 
-    const { data: frontmatter } = matter(markdownWithMeta)
+    console.log(slug);
+    try {
+      const { data: frontmatter, content } = matter(markdownWithMeta);
 
-    return {
-      slug,
-      frontmatter,
+      // frontmatter?.categories.split(', ').forEach(cat => { categories.push(cat) });
+
+      return {
+        slug,
+        frontmatter,
+        content
+      }
+    } catch (error) {
+      console.log(error);
     }
   })
+
+  // console.log(Array.from(new Set(categories)));
 
   return {
     props: {
