@@ -23,13 +23,13 @@
   color: #fafafa;
 }
 
-.footer a {
+/* .footer a {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-grow: 1;
   color: #eaeaea;
-}
+} */
 
 .title a {
   color: #0070f3;

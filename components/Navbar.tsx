@@ -11,11 +11,11 @@ function Navbar() {
         'ExpressJS', 'PostgreSQL',
         'SQLite', 'Laravel',
         'Vue.js', 'HTML/CSS',
-        'django', 'Mongoose',
+        'dJango', 'Mongoose',
         'Bulma', 'MySQL',
         'PHP', 'SQL',
         'Python', 'Deno',
-        'MongoDB',
+        'MongoDB', 'NextJS'
     ]);
 
     useEffect(() => {

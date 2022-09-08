@@ -4,7 +4,7 @@ import Logo from '../components/Logo'
 import Navbar from '../components/Navbar'
 import Footer from './Footer'
 
-export default function Template({ children, searchValue, setSearchValue }) {
+export default function Template({ children }) {
 
     return (
         <>
@@ -18,7 +18,7 @@ export default function Template({ children, searchValue, setSearchValue }) {
 
             <Navbar />
 
-            <main className='mx-20 my-5'>
+            <main className='mx-20 my-5 h-full'>
                 {children}
             </main >
 

@@ -23,7 +23,7 @@ const SlugPost = ({
     }
 
     return (
-        <Template searchValue={undefined} setSearchValue={undefined}>
+        <Template>
             <button className="rounded-full text-4xl" onClick={() => router.back()}>
                 <MdArrowBack />
             </button>

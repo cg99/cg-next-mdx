@@ -1,35 +1,43 @@
-import type { GetStaticProps, NextPage } from 'next'
-import { useState } from 'react';
-import FrontPage from '../components/FrontPage'
-import Template from '../components/Template'
-import matter from 'gray-matter'
-import path from 'path';
-import fs from 'fs'
-import { sortByDate } from '../utils';
-import Link from 'next/link';
-import Post from '../components/Post';
+import fs from 'fs';
+import matter from 'gray-matter';
+import type { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
+import path from 'path';
+import { useState } from 'react';
+import Post from '../components/Post';
+import Template from '../components/Template';
+import { sortByDate } from '../utils';
 
 function Home({ posts }) {
   const router = useRouter();
   const { category, search } = router.query;
 
+  if (category) {
+    posts = posts?.filter(post => post?.frontmatter.categories?.includes(category));
+  }
+
   if (search) {
     posts = posts?.filter(post => post?.content?.includes(search));
   }
 
+  const [totalPosts, setTotalPosts] = useState(6);
+
+  const len = posts.length;
+
   return (
-    <Template searchValue={undefined} setSearchValue={undefined}>
+    <Template>
       {/* <h1>Latest Posts</h1> */}
       <div className='mx-auto text-center'>
 
         <div className="grid md:grid-cols-3 sm:grid-cols-2 gap-4 text-left">
-          {category ? posts?.filter(post => post?.frontmatter?.categories?.includes(category)).map((post, idx) =>
-            <Post key={idx} post={post} />
-          ) : posts?.map((post, idx) => (
-            <Post key={idx} post={post} />
-          ))}
+          {posts?.slice(0, totalPosts).map((post, idx) => <Post key={idx} post={post} />)}
         </div>
+        {totalPosts <= len &&
+          <button className='bg-blue-600 rounded-full text-white py-2 px-4 mt-4 shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out'
+            onClick={() => setTotalPosts(totalPosts + 6)}>
+            Load More
+          </button>
+        }
 
       </div>
 
@@ -54,7 +62,7 @@ export const getStaticProps: GetStaticProps = () => {
       'utf-8'
     )
 
-    console.log(slug);
+    // console.log(slug);
     try {
       const { data: frontmatter, content } = matter(markdownWithMeta);
 
