@@ -34,7 +34,7 @@ function Navbar() {
                                 pathname: '/',
                                 query: { category: category },
                             }}>
-                                <a className='text-white'>{category}</a>
+                                <a className='text-white text-base'>{category}</a>
                             </Link>
                         </li>
                     ))}

@@ -4,14 +4,13 @@ import Logo from '../components/Logo'
 import Navbar from '../components/Navbar'
 import Footer from './Footer'
 
+
 export default function Template({ children }) {
 
     return (
         <>
             <Head>
                 <title>Codegenes</title>
-                <meta name="description" content="unique projects with source code" />
-                <link rel="icon" href="/favicon.ico" />
             </Head>
 
             <Logo />
@@ -23,6 +22,7 @@ export default function Template({ children }) {
             </main >
 
             <Footer />
+
         </>
     )
 }

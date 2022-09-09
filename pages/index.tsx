@@ -6,9 +6,15 @@ import path from 'path';
 import { useState } from 'react';
 import Post from '../components/Post';
 import Template from '../components/Template';
+import { useThemeContext } from '../context/theme';
 import { sortByDate } from '../utils';
 
 function Home({ posts }) {
+  // const [theme, setTheme] = useThemeContext();
+
+  // console.log(theme);
+
+
   const router = useRouter();
   const { category, search } = router.query;
 

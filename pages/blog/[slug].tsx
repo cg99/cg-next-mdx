@@ -6,7 +6,6 @@ import { useRouter } from 'next/router';
 import path from 'path';
 import { MdArrowBack } from 'react-icons/md';
 import Template from '../../components/Template';
-const DOMPurify = require('isomorphic-dompurify');
 import { marked } from 'marked';
 
 

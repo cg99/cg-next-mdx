@@ -1,7 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Template from '../components/Template'
+import { ThemeContext } from '../context/theme';
 
 const about = () => {
+    const [theme, setTheme] = useContext(ThemeContext);
+
+    console.log(theme);
     return (
         <Template>
             <h3>About</h3>
