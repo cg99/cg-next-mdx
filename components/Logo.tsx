@@ -18,20 +18,24 @@ const Logo = () => {
     }, [theme])
 
     return (
-        <div className='flex items-center justify-between my-8 mx-20'>
-            <Link href="/" className='grid content-center'>
-                <a className='p-2 dark:bg-white/20 rounded flex items-center'>
-                    <Image src="/images/logo.png" width={250} height={50} className="hover:cursor-pointer" />
-                </a>
-            </Link>
+        <div className='flex items-center justify-between py-6 px-20 dark:bg-slate-800'>
             <div className="text-lg dark:text-gray-200 text-slate-600">
-                unique projects with source code
+                <Link href="/" className='grid content-center'>
+                    <a className='p-2 rounded flex items-center'>
+                        <Image src="/images/logo.png"
+                            width={250} height={50}
+                            // quality={100}
+                            // unoptimized={true}
+                            className="hover:cursor-pointer" />
+                    </a>
+                </Link>
+                {/* <span>unique projects with source code</span> */}
             </div>
 
             <button
                 id="theme-toggle"
                 type="button"
-                className="text-purple-500 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-200 dark:focus:ring-purple-700 rounded-lg text-sm p-2.5"
+                className="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 focus:outline-none focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 rounded-lg text-sm p-2.5"
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             >
                 {theme === "dark" ? <BsFillSunFill /> : <BsFillMoonFill />}

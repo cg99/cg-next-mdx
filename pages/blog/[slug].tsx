@@ -27,34 +27,32 @@ const SlugPost = ({
                 <MdArrowBack />
             </button>
 
-            {
-                <article className='p-6 m-2 mt-4 shadow-sm relative'>
-                    <div className='w-full h-64 relative'>
-                        <Image src={cover_image ? cover_image : '/images/placeholder.webp'}
-                            layout='fill'
-                            objectFit='contain'
-                            alt={title}
-                            priority
-                        />
+            <article className='p-6 m-2 mt-4 shadow-sm relative bg-white dark:bg-slate-700'>
+                <div className='w-full h-64 relative'>
+                    <Image src={cover_image ? cover_image : '/images/placeholder.webp'}
+                        layout='fill'
+                        objectFit='contain'
+                        alt={title}
+                        priority
+                    />
+                </div>
+
+                <h2 className='text-2xl font-bold mt-10'>{title}</h2>
+
+                <h3 className='text-md text-blue-700 my-2'>{categories}</h3>
+
+                <div>
+                    {/* <div className="author">codegenius</div> */}
+                    <div className='text-slate-500'>
+                        {date}
                     </div>
-
-                    <h2 className='text-2xl font-bold'>{title}</h2>
-
-                    <h3 className='text-md text-blue-700 my-2'>{categories}</h3>
-
-                    <div>
-                        {/* <div className="author">codegenius</div> */}
-                        <div className='text-slate-500'>
-                            {date}
-                        </div>
-                    </div>
+                </div>
 
 
-                    <div className='text-slate-500 my-2'>
-                        <div dangerouslySetInnerHTML={{ __html: marked(content) }} />
-                    </div>
-                </article>
-            }
+                <div className='text-slate-500 dark:text-slate-200 my-2'>
+                    <div dangerouslySetInnerHTML={{ __html: marked(content) }} />
+                </div>
+            </article>
         </Template >
     )
 }

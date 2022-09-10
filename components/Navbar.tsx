@@ -34,7 +34,7 @@ function Navbar() {
                                 pathname: '/',
                                 query: { category: category },
                             }}>
-                                <a className='text-white text-base'>{category}</a>
+                                <a className='text-white dark:text-slate-200 text-base'>{category}</a>
                             </Link>
                         </li>
                     ))}
@@ -44,7 +44,7 @@ function Navbar() {
             <div className="flex rounded-md shadow-sm justify-center relative items-center">
                 <div className="xl:w-64">
                     <div className="my-auto input-group relative flex items-stretch w-full">
-                        <input type="search" className="form-control relative flex-auto min-w-0 block w-full px-4 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-gray-300 rounded-l-full transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" placeholder="Search" aria-label="Search" aria-describedby="button-addon2" onChange={(e) => {
+                        <input type="search" className="form-control relative flex-auto min-w-0 block w-full px-4 py-1.5 text-base font-normal text-gray-700 bg-white dark:bg-slate-300 bg-clip-padding border-gray-300 rounded-l-full transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" placeholder="Search" aria-label="Search" aria-describedby="button-addon2" onChange={(e) => {
                             // console.log(e.target.value);
                             setSearchValue(e.target.value);
                         }} />
@@ -57,7 +57,6 @@ function Navbar() {
                                     <RiSearchEyeLine />
                                 </a>
                             </Link>
-
                         </button>
                     </div>
                 </div>

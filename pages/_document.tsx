@@ -10,7 +10,7 @@ export default function Document() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <body className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+            <body className="bg-slate-100 dark:bg-slate-800 text-gray-900 dark:text-gray-100">
                 <Main />
                 <NextScript />
             </body>
