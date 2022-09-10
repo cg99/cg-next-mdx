@@ -18,7 +18,7 @@ const Logo = () => {
     }, [theme])
 
     return (
-        <div className='flex items-center justify-between py-6 px-20 dark:bg-slate-800'>
+        <div className='flex items-center justify-between md:my-4 md:py-0 md:px-20 dark:bg-slate-800'>
             <div className="text-lg dark:text-gray-200 text-slate-600">
                 <Link href="/" className='grid content-center'>
                     <a className='p-2 rounded flex items-center'>

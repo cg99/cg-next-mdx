@@ -27,7 +27,7 @@ a {
   text-decoration: none;
   color: #333;
 }
-
+/* 
 img {
   width: 100%;
   border-radius: 10px;
@@ -124,4 +124,4 @@ ol {
   .posts {
     grid-template-columns: 1fr;
   }
-}
+} */

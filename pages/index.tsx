@@ -35,9 +35,10 @@ function Home({ posts }) {
       {/* <h1>Latest Posts</h1> */}
       <div className='mx-auto text-center'>
 
-        <div className="grid md:grid-cols-3 sm:grid-cols-2 gap-4 text-left">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4 text-left">
           {posts?.slice(0, totalPosts).map((post, idx) => <Post key={idx} post={post} />)}
         </div>
+
         {totalPosts <= len &&
           <button className='bg-blue-600 rounded-full text-white dark:text-slate-300 py-2 px-4 mt-8 shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out'
             onClick={() => setTotalPosts(totalPosts + 6)}>
