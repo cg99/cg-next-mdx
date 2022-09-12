@@ -17,9 +17,12 @@
     "lodash": "^4.17.21",
     "marked": "^4.1.0",
     "next": "12.3.0",
+    "next-mdx-remote": "^4.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.4.0",
+    "rehype-prism-plus": "^1.5.0",
+    "remark-toc": "^8.0.1",
     "slugify": "^1.6.5",
     "use-debounce": "^8.0.4"
   },

@@ -3,4 +3,29 @@ slug: "generate-pdf-from-registration-form-in-php-mysql-and-fpdf"
 title: "Generate pdf from registration form in PHP, MySQL and FPDF"
 date: "December 8, 2021"
 categories: "MySQL, PHP, SQL"
+cover_image: "/images/posts/generate-pdf.jpeg"
 ---
+
+import { DownloadButton } from "../components/DownloadButton";
+
+Registration can be helpful in many ways such as registering a new user, survey and so on. This project is an online registration system using PHP and MySQL. This project also uses FPDF php library to generate a pdf file filled with information of the form.
+
+## Project Setup
+
+You need to have XAMPP/WAMP or similar web server to run this project.
+
+First of all, [download](https://u.pcloud.link/publink/show?code=XZIE5NXZ8cro9tLEncyb1aOOsUS0Rml4K0dV) the project files from the link at the bottom of this article.
+
+Download, extract it and put it in your web server root directory (c:\wamp\www for WAMP). This is where you would put your site files to access them through a browser. After that import the _attendees.sql_ dump file which is in the zip folder to your database (sql). It is easy to setup database using phpMyAdmin. Then, open the connect.php file inside the main expo folder and change credentials(username and password) to match your database’s setting. Now, you can access the site by going to URL _http://localhost/expo/_.
+
+We will be using css [bootstrap](https://getbootstrap.com/) to design our registration system website. The design is simple as we have a header containing only a link to registration form. Similarly, the two pages have a header and a footer at the bottom.
+
+## Features of Registration System
+
+A visitor can visit the registration form by simply clicking on the register now button. After that, the form can be filled up by putting relevant information in the form.
+
+When the form is submitted, it is stored in the database and a pdf is shown on the page containing information filled up by the visitor.
+
+Also, template folder contains files which decrease code repetition like header codes which is same in many pages. There is only one table in the database i.e. attendees.
+
+<DownloadButton link="https://u.pcloud.link/publink/show?code=XZIE5NXZ8cro9tLEncyb1aOOsUS0Rml4K0dV" />
