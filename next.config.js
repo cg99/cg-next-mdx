@@ -23,9 +23,7 @@ const withMDX = require('@next/mdx')({
   },
 })
 
-module.exports = {
-  nextConfig
-}
+module.exports = nextConfig;
 
 // module.exports = withMDX({
 //   // Append the default value with md extensions

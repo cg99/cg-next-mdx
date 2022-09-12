@@ -6,7 +6,7 @@ import path from 'path';
 import { useState } from 'react';
 import Post from '../components/Post';
 import Template from '../components/Template';
-import { useThemeContext } from '../context/theme';
+// import { useThemeContext } from '../context/theme';
 import { sortByDate } from '../utils';
 
 function Home({ posts }) {

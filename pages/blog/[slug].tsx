@@ -13,7 +13,7 @@ import rehypePrism from "rehype-prism-plus";
 import remarkToc from "remark-toc";
 
 
-const SlugPost = async ({
+const SlugPost = ({
     frontmatter: { title, date, cover_image, categories },
     slug,
     source,
@@ -55,7 +55,7 @@ const SlugPost = async ({
 
                 <div className='text-slate-500 dark:text-slate-200 my-2'>
                     {/* <div dangerouslySetInnerHTML={{ __html: marked(content) }} /> */}
-                    {/* <MDXRemote {...(source)} /> */}
+                    {<MDXRemote {...(source)} />}
                 </div>
             </article>
         </Template >
