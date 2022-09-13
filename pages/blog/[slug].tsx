@@ -11,6 +11,7 @@ import { MDXRemote } from 'next-mdx-remote';
 import { serialize } from "next-mdx-remote/serialize";
 import rehypePrism from "rehype-prism-plus";
 import remarkToc from "remark-toc";
+import GiscusComments from '../../components/GiscusComments';
 
 
 const SlugPost = ({
@@ -58,6 +59,10 @@ const SlugPost = ({
                     {<MDXRemote {...(source)} />}
                 </div>
             </article>
+
+            <div>
+                <GiscusComments />
+            </div>
         </Template >
     )
 }
@@ -95,7 +100,7 @@ export async function getStaticProps({ params: { slug } }) {
         },
     }); // parse the MDX string, now with pulgins
 
-    console.log(mdxSource);
+    // console.log(mdxSource);
 
 
     return {
